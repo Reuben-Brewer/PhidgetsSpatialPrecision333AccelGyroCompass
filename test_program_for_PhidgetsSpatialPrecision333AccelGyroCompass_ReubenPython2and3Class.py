@@ -6,7 +6,7 @@ reuben.brewer@gmail.com
 www.reubotics.com
 
 Apache 2 License
-Software Revision G, 05/10/2023
+Software Revision H, 09/24/2023
 
 Verified working on: Python 2.7, 3.8 for Windows 8.1, 10 64-bit and Raspberry Pi Buster (does not work on Mac).
 '''
@@ -230,12 +230,12 @@ def ConvertDictToProperlyFormattedStringForPrinting(DictToPrint, NumberOfDecimal
 
         if isinstance(DictToPrint[Key], dict): #RECURSION
             ProperlyFormattedStringForPrinting = ProperlyFormattedStringForPrinting + \
-                                                 Key + ":\n" + \
+                                                 str(Key) + ":\n" + \
                                                  ConvertDictToProperlyFormattedStringForPrinting(DictToPrint[Key], NumberOfDecimalsPlaceToUse, NumberOfEntriesPerLine, NumberOfTabsBetweenItems)
 
         else:
             ProperlyFormattedStringForPrinting = ProperlyFormattedStringForPrinting + \
-                                                 Key + ": " + \
+                                                 str(Key) + ": " + \
                                                  ConvertFloatToStringWithNumberOfLeadingNumbersAndDecimalPlaces_NumberOrListInput(DictToPrint[Key], 0, NumberOfDecimalsPlaceToUse)
 
         if ItemsPerLineCounter < NumberOfEntriesPerLine - 1:
@@ -287,8 +287,8 @@ def GUI_update_clock():
     global SHOW_IN_GUI_SpatialPrecision333_FLAG
 
     global MyPrint_ReubenPython2and3ClassObject
-    global MYPRINT_OPEN_FLAG
-    global SHOW_IN_GUI_MYPRINT_FLAG
+    global MyPrint_OPEN_FLAG
+    global SHOW_IN_GUI_MyPrint_FLAG
 
     if USE_GUI_FLAG == 1:
         if EXIT_PROGRAM_FLAG == 0:
@@ -301,7 +301,7 @@ def GUI_update_clock():
             #########################################################
 
             #########################################################
-            if MYPRINT_OPEN_FLAG == 1 and SHOW_IN_GUI_MYPRINT_FLAG == 1:
+            if MyPrint_OPEN_FLAG == 1 and SHOW_IN_GUI_MyPrint_FLAG == 1:
                 MyPrint_ReubenPython2and3ClassObject.GUI_update_clock()
             #########################################################
 
@@ -432,8 +432,8 @@ if __name__ == '__main__':
     global USE_SpatialPrecision333_FLAG
     USE_SpatialPrecision333_FLAG = 1
 
-    global USE_MYPRINT_FLAG
-    USE_MYPRINT_FLAG = 1
+    global USE_MyPrint_FLAG
+    USE_MyPrint_FLAG = 1
 
     global USE_PLOTTER_FLAG
     USE_PLOTTER_FLAG = 1
@@ -445,8 +445,8 @@ if __name__ == '__main__':
     global SHOW_IN_GUI_SpatialPrecision333_FLAG
     SHOW_IN_GUI_SpatialPrecision333_FLAG = 1
 
-    global SHOW_IN_GUI_MYPRINT_FLAG
-    SHOW_IN_GUI_MYPRINT_FLAG = 1
+    global SHOW_IN_GUI_MyPrint_FLAG
+    SHOW_IN_GUI_MyPrint_FLAG = 1
     #################################################
     #################################################
 
@@ -466,19 +466,19 @@ if __name__ == '__main__':
     GUI_ROWSPAN_SpatialPrecision333 = 1
     GUI_COLUMNSPAN_SpatialPrecision333 = 1
 
-    global GUI_ROW_MYPRINT
-    global GUI_COLUMN_MYPRINT
-    global GUI_PADX_MYPRINT
-    global GUI_PADY_MYPRINT
-    global GUI_ROWSPAN_MYPRINT
-    global GUI_COLUMNSPAN_MYPRINT
-    GUI_ROW_MYPRINT = 2
+    global GUI_ROW_MyPrint
+    global GUI_COLUMN_MyPrint
+    global GUI_PADX_MyPrint
+    global GUI_PADY_MyPrint
+    global GUI_ROWSPAN_MyPrint
+    global GUI_COLUMNSPAN_MyPrint
+    GUI_ROW_MyPrint = 2
 
-    GUI_COLUMN_MYPRINT = 0
-    GUI_PADX_MYPRINT = 1
-    GUI_PADY_MYPRINT = 1
-    GUI_ROWSPAN_MYPRINT = 1
-    GUI_COLUMNSPAN_MYPRINT = 1
+    GUI_COLUMN_MyPrint = 0
+    GUI_PADX_MyPrint = 1
+    GUI_PADY_MyPrint = 1
+    GUI_ROWSPAN_MyPrint = 1
+    GUI_COLUMNSPAN_MyPrint = 1
     #################################################
     #################################################
 
@@ -563,8 +563,8 @@ if __name__ == '__main__':
     #################################################
     global MyPrint_ReubenPython2and3ClassObject
 
-    global MYPRINT_OPEN_FLAG
-    MYPRINT_OPEN_FLAG = -1
+    global MyPrint_OPEN_FLAG
+    MyPrint_OPEN_FLAG = -1
     #################################################
     #################################################
 
@@ -636,7 +636,9 @@ if __name__ == '__main__':
                                                                                         ("Spatial_CallbackUpdateDeltaTmilliseconds", 2),
                                                                                         ("DataCollectionDurationInSecondsForSnapshottingAndZeroing", 2.0),
                                                                                         ("MainThread_TimeToSleepEachLoop", 0.001),
-                                                                                        ("HeatingEnabledToStabilizeSensorTemperature", True)])
+                                                                                        ("HeatingEnabledToStabilizeSensorTemperature", True),
+                                                                                        ("ZeroGyrosAtStartOfProgramFlag", 0),
+                                                                                        ("ZeroAlgorithmAtStartOfProgramFlag", 0)])
 
     if USE_SpatialPrecision333_FLAG == 1:
         try:
@@ -652,17 +654,17 @@ if __name__ == '__main__':
 
     #################################################
     #################################################
-    if USE_MYPRINT_FLAG == 1:
+    if USE_MyPrint_FLAG == 1:
 
-        MyPrint_ReubenPython2and3ClassObject_GUIparametersDict = dict([("USE_GUI_FLAG", USE_GUI_FLAG and SHOW_IN_GUI_MYPRINT_FLAG),
+        MyPrint_ReubenPython2and3ClassObject_GUIparametersDict = dict([("USE_GUI_FLAG", USE_GUI_FLAG and SHOW_IN_GUI_MyPrint_FLAG),
                                                                         ("root", Tab_MyPrint),
                                                                         ("UseBorderAroundThisGuiObjectFlag", 0),
-                                                                        ("GUI_ROW", GUI_ROW_MYPRINT),
-                                                                        ("GUI_COLUMN", GUI_COLUMN_MYPRINT),
-                                                                        ("GUI_PADX", GUI_PADX_MYPRINT),
-                                                                        ("GUI_PADY", GUI_PADY_MYPRINT),
-                                                                        ("GUI_ROWSPAN", GUI_ROWSPAN_MYPRINT),
-                                                                        ("GUI_COLUMNSPAN", GUI_COLUMNSPAN_MYPRINT)])
+                                                                        ("GUI_ROW", GUI_ROW_MyPrint),
+                                                                        ("GUI_COLUMN", GUI_COLUMN_MyPrint),
+                                                                        ("GUI_PADX", GUI_PADX_MyPrint),
+                                                                        ("GUI_PADY", GUI_PADY_MyPrint),
+                                                                        ("GUI_ROWSPAN", GUI_ROWSPAN_MyPrint),
+                                                                        ("GUI_COLUMNSPAN", GUI_COLUMNSPAN_MyPrint)])
 
         MyPrint_ReubenPython2and3ClassObject_setup_dict = dict([("NumberOfPrintLines", 10),
                                                                 ("WidthOfPrintingLabel", 200),
@@ -672,7 +674,7 @@ if __name__ == '__main__':
 
         try:
             MyPrint_ReubenPython2and3ClassObject = MyPrint_ReubenPython2and3Class(MyPrint_ReubenPython2and3ClassObject_setup_dict)
-            MYPRINT_OPEN_FLAG = MyPrint_ReubenPython2and3ClassObject.OBJECT_CREATED_SUCCESSFULLY_FLAG
+            MyPrint_OPEN_FLAG = MyPrint_ReubenPython2and3ClassObject.OBJECT_CREATED_SUCCESSFULLY_FLAG
 
         except:
             exceptions = sys.exc_info()[0]
@@ -737,7 +739,7 @@ if __name__ == '__main__':
 
     #################################################
     #################################################
-    if USE_MYPRINT_FLAG == 1 and MYPRINT_OPEN_FLAG != 1:
+    if USE_MyPrint_FLAG == 1 and MyPrint_OPEN_FLAG != 1:
         print("Failed to open MyPrint_ReubenPython2and3ClassObject.")
         ExitProgram_Callback()
     #################################################
@@ -828,7 +830,7 @@ if __name__ == '__main__':
     #################################################
 
     #################################################
-    if MYPRINT_OPEN_FLAG == 1:
+    if MyPrint_OPEN_FLAG == 1:
         MyPrint_ReubenPython2and3ClassObject.ExitProgram_Callback()
     #################################################
 

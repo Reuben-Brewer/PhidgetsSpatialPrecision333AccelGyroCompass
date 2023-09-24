@@ -6,7 +6,7 @@ reuben.brewer@gmail.com
 www.reubotics.com
 
 Apache 2 License
-Software Revision G, 05/10/2023
+Software Revision H, 09/24/2023
 
 Verified working on: Python 2.7, 3.8 for Windows 8.1, 10 64-bit and Raspberry Pi Buster (does not work on Mac).
 '''
@@ -136,9 +136,6 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
 
         self.SpatialData_AccelGyroMag_EventHandler_Queue = Queue.Queue()
         self.AlgorithmData_Quaternions_EventHandler_Queue = Queue.Queue()
-
-        self.ZeroGyros_NeedsToBeChangedFlag = 1 #unicorn IS IT OK TO DO THIS RIGHT AT PROGRAM-START?
-        self.ZeroAlgorithm_NeedsToBeChangedFlag = 1
 
         self.Acceleration_PhidgetUnits_DirectFromDataEventHandler = [-11111.0]*3
         self.Acceleration_PhidgetUnits_Raw = [-11111.0]*3
@@ -541,7 +538,36 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
         print("PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class __init__: MainThread_TimeToSleepEachLoop: " + str(self.MainThread_TimeToSleepEachLoop))
         #########################################################
         #########################################################
-        
+
+        #########################################################
+        #########################################################
+        if "ZeroGyrosAtStartOfProgramFlag" in setup_dict:
+            self.ZeroGyrosAtStartOfProgramFlag = self.PassThrough0and1values_ExitProgramOtherwise("ZeroGyrosAtStartOfProgramFlag", setup_dict["ZeroGyrosAtStartOfProgramFlag"])
+        else:
+            self.ZeroGyrosAtStartOfProgramFlag = 1
+
+        print("PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class __init__: ZeroGyrosAtStartOfProgramFlag: " + str(self.ZeroGyrosAtStartOfProgramFlag))
+        #########################################################
+        #########################################################
+
+        #########################################################
+        #########################################################
+        if "ZeroAlgorithmAtStartOfProgramFlag" in setup_dict:
+            self.ZeroAlgorithmAtStartOfProgramFlag = self.PassThrough0and1values_ExitProgramOtherwise("ZeroAlgorithmAtStartOfProgramFlag", setup_dict["ZeroAlgorithmAtStartOfProgramFlag"])
+        else:
+            self.ZeroAlgorithmAtStartOfProgramFlag = 1
+
+        print("PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class __init__: ZeroAlgorithmAtStartOfProgramFlag: " + str(self.ZeroAlgorithmAtStartOfProgramFlag))
+        #########################################################
+        #########################################################
+
+        #########################################################
+        #########################################################
+        self.ZeroGyros_NeedsToBeChangedFlag = self.ZeroGyrosAtStartOfProgramFlag
+        self.ZeroAlgorithm_NeedsToBeChangedFlag = self.ZeroAlgorithmAtStartOfProgramFlag
+        #########################################################
+        #########################################################
+
         #########################################################
         #########################################################
         self.PrintToGui_Label_TextInputHistory_List = [" "]*self.NumberOfPrintLines
@@ -1116,7 +1142,7 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
         try:
             #########################################################
             self.Spatial_PhidgetsSpatialObject.zeroAlgorithm()
-            self.MyPrint_WithoutLogFile("ZeroAlgorithm function fired!")
+            self.MyPrint_WithoutLogFile("@@@@@ ZeroAlgorithm function fired! @@@@@")
             #########################################################
 
         except PhidgetException as e:
@@ -1141,7 +1167,7 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
         try:
             #########################################################
             self.Spatial_PhidgetsSpatialObject.zeroGyro()
-            self.MyPrint_WithoutLogFile("ZeroGyros function fired!")
+            self.MyPrint_WithoutLogFile("@@@@@ ZeroGyros function fired! @@@@@")
             #########################################################
 
         except PhidgetException as e:
@@ -1439,7 +1465,7 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
         #self.GUI_Thread_ThreadingObject.setDaemon(True) #Should mean that the GUI thread is destroyed automatically when the main thread is destroyed.
         #self.GUI_Thread_ThreadingObject.start()
 
-        self.GUI_Thread(GuiParent) #unicorn
+        self.GUI_Thread(GuiParent)
     ##########################################################################################################
     ##########################################################################################################
 
@@ -1877,12 +1903,12 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
             ##########################################################################################################
             if isinstance(DictToPrint[Key], dict): #RECURSION
                 ProperlyFormattedStringForPrinting = ProperlyFormattedStringForPrinting + \
-                                                     Key + ":\n" + \
+                                                     str(Key) + ":\n" + \
                                                      self.ConvertDictToProperlyFormattedStringForPrinting(DictToPrint[Key], NumberOfDecimalsPlaceToUse, NumberOfEntriesPerLine, NumberOfTabsBetweenItems)
 
             else:
                 ProperlyFormattedStringForPrinting = ProperlyFormattedStringForPrinting + \
-                                                     Key + ": " + \
+                                                     str(Key) + ": " + \
                                                      self.ConvertFloatToStringWithNumberOfLeadingNumbersAndDecimalPlaces_NumberOrListInput(DictToPrint[Key], 0, NumberOfDecimalsPlaceToUse)
             ##########################################################################################################
 

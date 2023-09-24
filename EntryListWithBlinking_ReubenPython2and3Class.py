@@ -6,7 +6,7 @@ reuben.brewer@gmail.com
 www.reubotics.com
 
 Apache 2 License
-Software Revision E, 05/10/2023
+Software Revision F, 09/24/2023
 
 Verified working on: Python 2.7, 3.8 for Windows 8.1, 10 64-bit and Raspberry Pi Buster (no Mac testing yet).
 '''
@@ -224,8 +224,20 @@ class EntryListWithBlinking_ReubenPython2and3Class(Frame): #Subclass the Tkinter
 
         #########################################################
         #########################################################
+        if "LoseFocusIfMouseLeavesEntryFlag" in setup_dict:
+            self.LoseFocusIfMouseLeavesEntryFlag = self.PassThrough0and1values_ExitProgramOtherwise("LoseFocusIfMouseLeavesEntryFlag", setup_dict["LoseFocusIfMouseLeavesEntryFlag"])
+        else:
+            self.LoseFocusIfMouseLeavesEntryFlag = 1
+
+        print("EntryListWithBlinking_ReubenPython2and3Class __init__: LoseFocusIfMouseLeavesEntryFlag: " + str(self.LoseFocusIfMouseLeavesEntryFlag))
         #########################################################
         #########################################################
+
+        #########################################################
+        #########################################################
+        #########################################################
+        #########################################################
+
         #########################################################
         #########################################################
         #########################################################
@@ -297,21 +309,21 @@ class EntryListWithBlinking_ReubenPython2and3Class(Frame): #Subclass the Tkinter
 
                                 #############################
                                 if "EntryWidth" in Variable_dict:
-                                    Variable_EntryWidth = int(self.PassThroughFloatValuesInRange_ExitProgramOtherwise(Variable_name + ", EntryWidth", Variable_dict["EntryWidth"], 5, 100))
+                                    Variable_EntryWidth = int(self.PassThroughFloatValuesInRange_ExitProgramOtherwise(Variable_name + ", EntryWidth", Variable_dict["EntryWidth"], 5, 500))
                                 else:
                                     Variable_EntryWidth = 10
                                 #############################
 
                                 #############################
                                 if "LabelWidth" in Variable_dict:
-                                    Variable_LabelWidth = int(self.PassThroughFloatValuesInRange_ExitProgramOtherwise(Variable_name + ", LabelWidth", Variable_dict["LabelWidth"], 5, 100))
+                                    Variable_LabelWidth = int(self.PassThroughFloatValuesInRange_ExitProgramOtherwise(Variable_name + ", LabelWidth", Variable_dict["LabelWidth"], 5, 500))
                                 else:
                                     Variable_LabelWidth = 25
                                 #############################
 
                                 #############################
                                 if "FontSize" in Variable_dict:
-                                    Variable_FontSize = int(self.PassThroughFloatValuesInRange_ExitProgramOtherwise(Variable_name + ", FontSize", Variable_dict["FontSize"], 8, 20))
+                                    Variable_FontSize = int(self.PassThroughFloatValuesInRange_ExitProgramOtherwise(Variable_name + ", FontSize", Variable_dict["FontSize"], 8, 500))
                                 else:
                                     Variable_FontSize = 8
                                 #############################
@@ -729,7 +741,7 @@ class EntryListWithBlinking_ReubenPython2and3Class(Frame): #Subclass the Tkinter
     ##########################################################################################################
     ##########################################################################################################
 
-    ##########################################################################################################
+    ###########################################################################################################
     ##########################################################################################################
     def EntryEventResponse(self, event, Variable_name):
 
@@ -745,18 +757,22 @@ class EntryListWithBlinking_ReubenPython2and3Class(Frame): #Subclass the Tkinter
 
                 if str(Value) != "":
 
-                    Value = self.LimitTextEntryInput(self.EntryListWithBlinking_Variables_DictOfDicts[Variable_name]["MinVal"], self.EntryListWithBlinking_Variables_DictOfDicts[Variable_name]["MaxVal"], Value, self.EntryListWithBlinking_Variables_DictOfDicts[Variable_name]["StringVar"])
+                    try:
+                        Value = self.LimitTextEntryInput(self.EntryListWithBlinking_Variables_DictOfDicts[Variable_name]["MinVal"], self.EntryListWithBlinking_Variables_DictOfDicts[Variable_name]["MaxVal"], Value, self.EntryListWithBlinking_Variables_DictOfDicts[Variable_name]["StringVar"])
 
-                    if self.EntryListWithBlinking_Variables_DictOfDicts[Variable_name]["Type"] == "int":
-                        Value = int(Value)
-                        self.EntryListWithBlinking_Variables_DictOfDicts[Variable_name]["StringVar"].set(Value) #if we don't set the integer value, then it appears as a float
+                        if self.EntryListWithBlinking_Variables_DictOfDicts[Variable_name]["Type"] == "int":
+                            Value = int(Value)
+                            self.EntryListWithBlinking_Variables_DictOfDicts[Variable_name]["StringVar"].set(Value) #if we don't set the integer value, then it appears as a float
 
-                    elif self.EntryListWithBlinking_Variables_DictOfDicts[Variable_name]["Type"] == "float":
-                        Value = float(Value)
+                        elif self.EntryListWithBlinking_Variables_DictOfDicts[Variable_name]["Type"] == "float":
+                            Value = float(Value)
 
-                    self.EntryListWithBlinking_Variables_DictOfDicts[Variable_name]["Value"] = Value
-                    self.MostRecentDataDict[Variable_name] = Value
-                    self.MostRecentDataDict["DataUpdateNumber"] = self.MostRecentDataDict["DataUpdateNumber"] + 1
+                        self.EntryListWithBlinking_Variables_DictOfDicts[Variable_name]["Value"] = Value
+                        self.MostRecentDataDict[Variable_name] = Value
+                        self.MostRecentDataDict["DataUpdateNumber"] = self.MostRecentDataDict["DataUpdateNumber"] + 1
+
+                    except:
+                        pass
 
             else: #string
                 self.EntryListWithBlinking_Variables_DictOfDicts[Variable_name]["Value"] = Value
@@ -890,20 +906,27 @@ class EntryListWithBlinking_ReubenPython2and3Class(Frame): #Subclass the Tkinter
     ##########################################################################################################
     def LimitTextEntryInput(self, min_val, max_val, test_val, TextEntryObject):
 
-        test_val = float(test_val)  # MUST HAVE THIS LINE TO CATCH STRINGS PASSED INTO THE FUNCTION
+        try:
+            test_val = float(test_val)  # MUST HAVE THIS LINE TO CATCH STRINGS PASSED INTO THE FUNCTION
 
-        if test_val > max_val:
-            test_val = max_val
-        elif test_val < min_val:
-            test_val = min_val
-        else:
-            test_val = test_val
-
-        if TextEntryObject != "":
-            if isinstance(TextEntryObject, list) == 1:  # Check if the input 'TextEntryObject' is a list or not
-                TextEntryObject[0].set(str(test_val))  # Reset the text, overwriting the bad value that was entered.
+            if test_val > max_val:
+                test_val = max_val
+            elif test_val < min_val:
+                test_val = min_val
             else:
-                TextEntryObject.set(str(test_val))  # Reset the text, overwriting the bad value that was entered.
+                test_val = test_val
+
+        except:
+            pass
+
+        try:
+            if TextEntryObject != "":
+                if isinstance(TextEntryObject, list) == 1:  # Check if the input 'TextEntryObject' is a list or not
+                    TextEntryObject[0].set(str(test_val))  # Reset the text, overwriting the bad value that was entered.
+                else:
+                    TextEntryObject.set(str(test_val))  # Reset the text, overwriting the bad value that was entered.
+        except:
+            pass
 
         return test_val
     ##########################################################################################################
