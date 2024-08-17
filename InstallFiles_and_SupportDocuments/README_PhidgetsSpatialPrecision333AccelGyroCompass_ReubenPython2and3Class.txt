@@ -40,7 +40,7 @@ www.reubotics.com
 
 Apache 2 License
 
-Software Revision H, 09/24/2023
+Software Revision I, 08/17/2024
 
 Verified working on: 
 Python 2.7, 3.8.
@@ -54,9 +54,13 @@ Raspberry Pi Buster
 
 ########################### Python module installation instructions, all OS's
 
+
 PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class, ListOfModuleDependencies: ['future.builtins', 'LowPassFilter_ReubenPython2and3Class', 'numpy', 'Phidget22', 'scipy.spatial.transform', 'ZeroAndSnapshotData_ReubenPython2and3Class']
-PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class, ListOfModuleDependencies_TestProgram: ['MyPlotterPureTkinterStandAloneProcess_ReubenPython2and3Class', 'MyPrint_ReubenPython2and3Class']
+
+PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class, ListOfModuleDependencies_TestProgram: ['EntryListWithBlinking_ReubenPython2and3Class', 'MyPlotterPureTkinterStandAloneProcess_ReubenPython2and3Class', 'MyPrint_ReubenPython2and3Class']
+
 PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class, ListOfModuleDependencies_NestedLayers: ['EntryListWithBlinking_ReubenPython2and3Class', 'future.builtins', 'LowPassFilter_ReubenPython2and3Class', 'numpy', 'pexpect', 'psutil']
+
 PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class, ListOfModuleDependencies_All:['EntryListWithBlinking_ReubenPython2and3Class', 'future.builtins', 'LowPassFilter_ReubenPython2and3Class', 'MyPlotterPureTkinterStandAloneProcess_ReubenPython2and3Class', 'MyPrint_ReubenPython2and3Class', 'numpy', 'pexpect', 'Phidget22', 'psutil', 'scipy.spatial.transform', 'ZeroAndSnapshotData_ReubenPython2and3Class']
 
 https://pypi.org/project/Phidget22/#files

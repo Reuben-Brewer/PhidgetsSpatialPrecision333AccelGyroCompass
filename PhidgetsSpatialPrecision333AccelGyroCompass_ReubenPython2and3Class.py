@@ -6,7 +6,7 @@ reuben.brewer@gmail.com
 www.reubotics.com
 
 Apache 2 License
-Software Revision H, 09/24/2023
+Software Revision I, 08/17/2024
 
 Verified working on: Python 2.7, 3.8 for Windows 8.1, 10 64-bit and Raspberry Pi Buster (does not work on Mac).
 '''
@@ -169,6 +169,8 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
 
         self.RollPitchYaw_AbtXYZ_Dict = dict() #What's getting returned in self.MostRecentDataDict
         self.RollPitchYaw_Rate_AbtXYZ_Dict = dict() #What's getting returned in self.MostRecentDataDict
+
+        self.setAHRSParameters_NeedsToBeFiredFlag = 1
 
         self.MostRecentDataDict = dict()
         #########################################################
@@ -558,6 +560,78 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
             self.ZeroAlgorithmAtStartOfProgramFlag = 1
 
         print("PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class __init__: ZeroAlgorithmAtStartOfProgramFlag: " + str(self.ZeroAlgorithmAtStartOfProgramFlag))
+        #########################################################
+        #########################################################
+        
+        #########################################################
+        #########################################################
+        if "AHRS_Parameters_angularVelocityThreshold" in setup_dict:
+            self.AHRS_Parameters_angularVelocityThreshold = self.PassThroughFloatValuesInRange_ExitProgramOtherwise("AHRS_Parameters_angularVelocityThreshold", setup_dict["AHRS_Parameters_angularVelocityThreshold"], 0.0, 1000000000.0)
+
+        else:
+            self.AHRS_Parameters_angularVelocityThreshold = 0.0
+
+        print("PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class __init__: AHRS_Parameters_angularVelocityThreshold: " + str(self.AHRS_Parameters_angularVelocityThreshold))
+        #########################################################
+        #########################################################
+
+        #########################################################
+        #########################################################
+        if "AHRS_Parameters_angularVelocityDeltaThreshold" in setup_dict:
+            self.AHRS_Parameters_angularVelocityDeltaThreshold = self.PassThroughFloatValuesInRange_ExitProgramOtherwise("AHRS_Parameters_angularVelocityDeltaThreshold", setup_dict["AHRS_Parameters_angularVelocityDeltaThreshold"], 0.0, 1000000000.0)
+
+        else:
+            self.AHRS_Parameters_angularVelocityDeltaThreshold = 0.0
+
+        print("PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class __init__: AHRS_Parameters_angularVelocityDeltaThreshold: " + str(self.AHRS_Parameters_angularVelocityDeltaThreshold))
+        #########################################################
+        #########################################################
+        
+        #########################################################
+        #########################################################
+        if "AHRS_Parameters_accelerationThreshold" in setup_dict:
+            self.AHRS_Parameters_accelerationThreshold = self.PassThroughFloatValuesInRange_ExitProgramOtherwise("AHRS_Parameters_accelerationThreshold", setup_dict["AHRS_Parameters_accelerationThreshold"], 0.0, 1000000000.0)
+
+        else:
+            self.AHRS_Parameters_accelerationThreshold = 0.0
+
+        print("PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class __init__: AHRS_Parameters_accelerationThreshold: " + str(self.AHRS_Parameters_accelerationThreshold))
+        #########################################################
+        #########################################################
+        
+        #########################################################
+        #########################################################
+        if "AHRS_Parameters_magTime" in setup_dict:
+            self.AHRS_Parameters_magTime = self.PassThroughFloatValuesInRange_ExitProgramOtherwise("AHRS_Parameters_magTime", setup_dict["AHRS_Parameters_magTime"], 0.0, 1000000000.0)
+
+        else:
+            self.AHRS_Parameters_magTime = 0.0
+
+        print("PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class __init__: AHRS_Parameters_magTime: " + str(self.AHRS_Parameters_magTime))
+        #########################################################
+        #########################################################
+        
+        #########################################################
+        #########################################################
+        if "AHRS_Parameters_accelTime" in setup_dict:
+            self.AHRS_Parameters_accelTime = self.PassThroughFloatValuesInRange_ExitProgramOtherwise("AHRS_Parameters_accelTime", setup_dict["AHRS_Parameters_accelTime"], 0.0, 1000000000.0)
+
+        else:
+            self.AHRS_Parameters_accelTime = 0.0
+
+        print("PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class __init__: AHRS_Parameters_accelTime: " + str(self.AHRS_Parameters_accelTime))
+        #########################################################
+        #########################################################
+        
+        #########################################################
+        #########################################################
+        if "AHRS_Parameters_biasTime" in setup_dict:
+            self.AHRS_Parameters_biasTime = self.PassThroughFloatValuesInRange_ExitProgramOtherwise("AHRS_Parameters_biasTime", setup_dict["AHRS_Parameters_biasTime"], 0.0, 1000000000.0)
+
+        else:
+            self.AHRS_Parameters_biasTime = 0.0
+
+        print("PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class __init__: AHRS_Parameters_biasTime: " + str(self.AHRS_Parameters_biasTime))
         #########################################################
         #########################################################
 
@@ -1045,6 +1119,97 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
 
     ##########################################################################################################
     ##########################################################################################################
+    def SetAHRSParameters_MyFunction(self, AHRS_Parameters_angularVelocityThreshold, AHRS_Parameters_angularVelocityDeltaThreshold, AHRS_Parameters_accelerationThreshold, AHRS_Parameters_magTime, AHRS_Parameters_accelTime, AHRS_Parameters_biasTime):
+        '''
+        AHRS_Parameters_angularVelocityThreshold(type: float):The maximum angular velocity reading where the device is assumed to be "at rest"
+        AHRS_Parameters_angularVelocityDeltaThreshold(type: float):The acceptable amount of change in angular velocity between measurements before movement is assumed.
+        AHRS_Parameters_accelerationThreshold(type: float):The maximum acceleration applied to the device (minus gravity) where it is assumed to be "at rest". This is also the maximum acceleration allowable before the device stops correcting to the acceleration vector.
+        AHRS_Parameters_magTime(type: float):The time it will take to correct the heading 95% of the way to aligning with the compass (in seconds),up to 15 degrees of error. Beyond 15 degrees, this is the time it will take for the bearing to move 45 degrees towards the compass reading. Remember you can zero the algorithm at any time to instantly realign the spatial with acceleration and magnetic field vectors regardless of magnitude.
+        AHRS_Parameters_accelTime(type: float):The time it will take to correct the pitch and roll 95% of the way to aligning with the accelerometer (in seconds).
+        AHRS_Parameters_biasTime(type: float):The time it will take to have the gyro biases settle to within 95% of the measured steady state (in seconds).
+        '''
+
+        self.AHRS_Parameters_angularVelocityThreshold = self.LimitNumber_FloatOutputOnly(0.0, 1000000000.0, AHRS_Parameters_angularVelocityThreshold)
+        self.AHRS_Parameters_angularVelocityDeltaThreshold = self.LimitNumber_FloatOutputOnly(0.0, 1000000000.0, AHRS_Parameters_angularVelocityDeltaThreshold)
+        self.AHRS_Parameters_accelerationThreshold = self.LimitNumber_FloatOutputOnly(0.0, 1000000000.0, AHRS_Parameters_accelerationThreshold)
+        self.AHRS_Parameters_magTime = self.LimitNumber_FloatOutputOnly(0.0, 1000000000.0, AHRS_Parameters_magTime)
+        self.AHRS_Parameters_accelTime = self.LimitNumber_FloatOutputOnly(0.0, 1000000000.0, AHRS_Parameters_accelTime)
+        self.AHRS_Parameters_biasTime = self.LimitNumber_FloatOutputOnly(0.0, 1000000000.0, AHRS_Parameters_biasTime)
+
+        self.setAHRSParameters_NeedsToBeFiredFlag = 1
+
+    ##########################################################################################################
+    ##########################################################################################################
+
+    ##########################################################################################################
+    ##########################################################################################################
+    def LimitNumber_IntOutputOnly(self, min_val, max_val, test_val):
+        if test_val > max_val:
+            test_val = max_val
+
+        elif test_val < min_val:
+            test_val = min_val
+
+        else:
+            test_val = test_val
+
+        test_val = int(test_val)
+
+        return test_val
+    ##########################################################################################################
+    ##########################################################################################################
+
+    ##########################################################################################################
+    ##########################################################################################################
+    def LimitNumber_FloatOutputOnly(self, min_val, max_val, test_val):
+        if test_val > max_val:
+            test_val = max_val
+
+        elif test_val < min_val:
+            test_val = min_val
+
+        else:
+            test_val = test_val
+
+        test_val = float(test_val)
+
+        return test_val
+    ##########################################################################################################
+    ##########################################################################################################
+
+    ##########################################################################################################
+    ##########################################################################################################
+    def LimitTextEntryInput(self, min_val, max_val, test_val, TextEntryObject):
+
+        try:
+            test_val = float(test_val)  # MUST HAVE THIS LINE TO CATCH STRINGS PASSED INTO THE FUNCTION
+
+            if test_val > max_val:
+                test_val = max_val
+            elif test_val < min_val:
+                test_val = min_val
+            else:
+                test_val = test_val
+
+        except:
+            pass
+
+        try:
+            if TextEntryObject != "":
+                if isinstance(TextEntryObject, list) == 1:  # Check if the input 'TextEntryObject' is a list or not
+                    TextEntryObject[0].set(str(test_val))  # Reset the text, overwriting the bad value that was entered.
+                else:
+                    TextEntryObject.set(str(test_val))  # Reset the text, overwriting the bad value that was entered.
+        except:
+            pass
+
+        return test_val
+    ##########################################################################################################
+    ##########################################################################################################
+
+
+    ##########################################################################################################
+    ##########################################################################################################
     def getPreciseSecondsTimeStampString(self):
         ts = time.time()
 
@@ -1301,6 +1466,26 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
                 if self.ZeroGyros_NeedsToBeChangedFlag == 1:
                     self.__ZeroGyros()
                     self.ZeroGyros_NeedsToBeChangedFlag = 0
+                ##########################################################################################################
+
+                ##########################################################################################################
+                if self.setAHRSParameters_NeedsToBeFiredFlag == 1:
+                    self.Spatial_PhidgetsSpatialObject.setAHRSParameters(self.AHRS_Parameters_angularVelocityThreshold,
+                                                                         self.AHRS_Parameters_angularVelocityDeltaThreshold,
+                                                                         self.AHRS_Parameters_accelerationThreshold,
+                                                                         self.AHRS_Parameters_magTime,
+                                                                         self.AHRS_Parameters_accelTime,
+                                                                         self.AHRS_Parameters_biasTime)
+
+                    print("setAHRSParameters event fired for\n" +
+                          "self.AHRS_Parameters_angularVelocityThreshold = " + str(self.AHRS_Parameters_angularVelocityThreshold) + "\n" +\
+                          "self.AHRS_Parameters_angularVelocityDeltaThreshold = " + str(self.AHRS_Parameters_angularVelocityDeltaThreshold) + "\n" +\
+                          "self.AHRS_Parameters_accelerationThreshold = " + str(self.AHRS_Parameters_accelerationThreshold) + "\n" +\
+                          "self.AHRS_Parameters_magTime = " + str(self.AHRS_Parameters_magTime) + "\n" +\
+                          "self.AHRS_Parameters_accelTime = " + str(self.AHRS_Parameters_accelTime) + "\n" +\
+                          "self.AHRS_Parameters_biasTime = " + str(self.AHRS_Parameters_biasTime))
+
+                    self.setAHRSParameters_NeedsToBeFiredFlag = 0
                 ##########################################################################################################
 
                 ##########################################################################################################
