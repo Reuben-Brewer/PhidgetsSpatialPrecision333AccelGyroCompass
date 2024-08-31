@@ -6,7 +6,7 @@ reuben.brewer@gmail.com
 www.reubotics.com
 
 Apache 2 License
-Software Revision F, 09/24/2023
+Software Revision G, 08/31/2024
 
 Verified working on: Python 2.7, 3.8 for Windows 8.1, 10 64-bit and Raspberry Pi Buster (no Mac testing yet).
 '''
@@ -704,9 +704,9 @@ class EntryListWithBlinking_ReubenPython2and3Class(Frame): #Subclass the Tkinter
         #################################################
 
         #################################################
-        self.DebugByPrintingVariables_Label = Label(self.myFrame, text="DebugByPrintingVariables_Label", width=100)
+        self.DebugByPrintingVariables_Label = Label(self.myFrame, text="DebugByPrintingVariables_Label", width=50)
         if self.DebugByPrintingVariablesFlag == 1:
-            self.DebugByPrintingVariables_Label.grid(row=0, column=1, padx=5, pady=1, columnspan=1, rowspan=10)
+            self.DebugByPrintingVariables_Label.grid(row=0, column=1, padx=1, pady=1, columnspan=1, rowspan=1)
         #################################################
 
         ####################################################
@@ -728,8 +728,10 @@ class EntryListWithBlinking_ReubenPython2and3Class(Frame): #Subclass the Tkinter
 
             self.EntryListWithBlinking_Variables_DictOfDicts[Variable_name]["Entry"].grid(row=EntryRow, column=1, padx=0, pady=0, columnspan=1, rowspan=1)
             self.EntryListWithBlinking_Variables_DictOfDicts[Variable_name]["Entry"].bind('<Return>', lambda event, Variable_name=Variable_name: self.EntryEventResponse(event, Variable_name))
-            self.EntryListWithBlinking_Variables_DictOfDicts[Variable_name]["Entry"].bind('<Leave>', lambda event, Variable_name=Variable_name: self.EntryEventResponse(event, Variable_name))
             self.EntryListWithBlinking_Variables_DictOfDicts[Variable_name]["Entry"].bind('<ButtonPress-1>', lambda event, Variable_name=Variable_name: self.EntryEventResponse(event, Variable_name))
+
+            if self.LoseFocusIfMouseLeavesEntryFlag == 1:
+                self.EntryListWithBlinking_Variables_DictOfDicts[Variable_name]["Entry"].bind('<Leave>', lambda event, Variable_name=Variable_name: self.EntryEventResponse(event, Variable_name))
 
             EntryRow = EntryRow + 1
         ###################################################

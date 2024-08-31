@@ -6,7 +6,7 @@ reuben.brewer@gmail.com
 www.reubotics.com
 
 Apache 2 License
-Software Revision I, 08/17/2024
+Software Revision J, 08/31/2024
 
 Verified working on: Python 2.7, 3.8 for Windows 8.1, 10 64-bit and Raspberry Pi Buster (does not work on Mac).
 '''
@@ -737,15 +737,15 @@ if __name__ == '__main__':
                                                                                         ("NameToDisplay_UserSet", "Reuben's Test SpatialPrecision333 Board"),
                                                                                         ("UsePhidgetsLoggingInternalToThisClassObjectFlag", 1),
                                                                                         ("SpatialAlgorithm", "IMU"), #IMU, AHRS, or None
-                                                                                        ("RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegPerSec_UseMedianFilterFlag", 1),
-                                                                                        ("RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegPerSec_UseExponentialSmoothingFilterFlag", 1),
-                                                                                        ("RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegPerSec_ExponentialSmoothingFilterLambda", 0.98), #For lambda: new_filtered_value = lambda * raw_sensor_value + (1 - lambda) * old_filtered_value
-                                                                                        ("PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegPerSec_UseMedianFilterFlag", 1),
-                                                                                        ("PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegPerSec_UseExponentialSmoothingFilterFlag", 1),
-                                                                                        ("PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegPerSec_ExponentialSmoothingFilterLambda", 0.98),
-                                                                                        ("YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegPerSec_UseMedianFilterFlag", 1),
-                                                                                        ("YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegPerSec_UseExponentialSmoothingFilterFlag", 1),
-                                                                                        ("YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegPerSec_ExponentialSmoothingFilterLambda", 0.98),
+                                                                                        ("RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag", 1),
+                                                                                        ("RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseExponentialSmoothingFilterFlag", 1),
+                                                                                        ("RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_ExponentialSmoothingFilterLambda", 0.98), #For lambda: new_filtered_value = lambda * raw_sensor_value + (1 - lambda) * old_filtered_value
+                                                                                        ("PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag", 1),
+                                                                                        ("PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseExponentialSmoothingFilterFlag", 1),
+                                                                                        ("PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_ExponentialSmoothingFilterLambda", 0.98),
+                                                                                        ("YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag", 1),
+                                                                                        ("YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseExponentialSmoothingFilterFlag", 1),
+                                                                                        ("YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_ExponentialSmoothingFilterLambda", 0.98),
                                                                                         ("Spatial_CallbackUpdateDeltaTmilliseconds", 2),
                                                                                         ("DataCollectionDurationInSecondsForSnapshottingAndZeroing", 2.0),
                                                                                         ("MainThread_TimeToSleepEachLoop", 0.001),
