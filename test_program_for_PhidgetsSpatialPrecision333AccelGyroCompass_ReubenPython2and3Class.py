@@ -6,12 +6,20 @@ reuben.brewer@gmail.com
 www.reubotics.com
 
 Apache 2 License
-Software Revision J, 08/31/2024
+Software Revision K, 12/28/2025
 
-Verified working on: Python 2.7, 3.8 for Windows 8.1, 10 64-bit and Raspberry Pi Buster (does not work on Mac).
+Verified working on: Python 3.11/12/13 for Windows 10/11 64-bit and Raspberry Pi Bookworm (does not work on Mac in GUI mode).
 '''
 
 __author__ = 'reuben.brewer'
+
+##########################################################################################################
+##########################################################################################################
+
+###########################################################
+import ReubenGithubCodeModulePaths #Replaces the need to have "ReubenGithubCodeModulePaths.pth" within "C:\Anaconda3\Lib\site-packages".
+ReubenGithubCodeModulePaths.Enable()
+###########################################################
 
 ###########################################################
 from EntryListWithBlinking_ReubenPython2and3Class import *
@@ -28,17 +36,15 @@ import time
 import datetime
 import threading
 import collections
+import math
+import traceback
+import keyboard
 ###########################################################
 
 ###########################################################
-if sys.version_info[0] < 3:
-    from Tkinter import * #Python 2
-    import tkFont
-    import ttk
-else:
-    from tkinter import * #Python 3
-    import tkinter.font as tkFont #Python 3
-    from tkinter import ttk
+from tkinter import *
+import tkinter.font as tkFont
+from tkinter import ttk
 ###########################################################
 
 ###########################################################
@@ -48,6 +54,9 @@ if platform.system() == "Windows":
     winmm = ctypes.WinDLL('winmm')
     winmm.timeBeginPeriod(1) #Set minimum timer resolution to 1ms so that time.sleep(0.001) behaves properly.
 ###########################################################
+
+##########################################################################################################
+##########################################################################################################
 
 ###########################################################################################################
 ##########################################################################################################
@@ -283,15 +292,15 @@ def GUI_update_clock():
     global GUI_RootAfterCallbackInterval_Milliseconds
     global USE_GUI_FLAG
 
-    global PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3ClassObject
+    global SpatialPrecision333_Object
     global SpatialPrecision333_OPEN_FLAG
     global SHOW_IN_GUI_SpatialPrecision333_FLAG
 
-    global EntryListWithBlinking_ReubenPython2and3ClassObject
+    global EntryListWithBlinking_Object
     global EntryListWithBlinking_OPEN_FLAG
     global SHOW_IN_GUI_EntryListWithBlinking_FLAG
 
-    global MyPrint_ReubenPython2and3ClassObject
+    global MyPrint_Object
     global MyPrint_OPEN_FLAG
     global SHOW_IN_GUI_MyPrint_FLAG
 
@@ -302,17 +311,17 @@ def GUI_update_clock():
 
             #########################################################
             if SpatialPrecision333_OPEN_FLAG == 1 and SHOW_IN_GUI_SpatialPrecision333_FLAG == 1:
-                PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3ClassObject.GUI_update_clock()
+                SpatialPrecision333_Object.GUI_update_clock()
             #########################################################
 
             #########################################################
             if EntryListWithBlinking_OPEN_FLAG == 1 and SHOW_IN_GUI_EntryListWithBlinking_FLAG == 1:
-                EntryListWithBlinking_ReubenPython2and3ClassObject.GUI_update_clock()
+                EntryListWithBlinking_Object.GUI_update_clock()
             #########################################################
 
             #########################################################
             if MyPrint_OPEN_FLAG == 1 and SHOW_IN_GUI_MyPrint_FLAG == 1:
-                MyPrint_ReubenPython2and3ClassObject.GUI_update_clock()
+                MyPrint_Object.GUI_update_clock()
             #########################################################
 
             root.after(GUI_RootAfterCallbackInterval_Milliseconds, GUI_update_clock)
@@ -324,7 +333,7 @@ def GUI_update_clock():
 
 ##########################################################################################################
 ##########################################################################################################
-def ExitProgram_Callback():
+def ExitProgram_Callback(OptionalArugment = 0):
     global EXIT_PROGRAM_FLAG
 
     print("ExitProgram_Callback event fired!")
@@ -344,9 +353,22 @@ def GUI_Thread():
     global GUI_RootAfterCallbackInterval_Milliseconds
     global USE_TABS_IN_GUI_FLAG
 
+    global SpatialPrecision333_Object
+    global SpatialPrecision333_OPEN_FLAG
+
+    global EntryListWithBlinking_Object
+    global EntryListWithBlinking_OPEN_FLAG
+
+    global MyPrint_Object
+    global MyPrint_OPEN_FLAG
+
     ################################################# KEY GUI LINE
     #################################################
     root = Tk()
+    
+    root.protocol("WM_DELETE_WINDOW", ExitProgram_Callback)  # Set the callback function for when the window's closed.
+    root.title("test_program_for_PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class")
+    root.geometry('%dx%d+%d+%d' % (root_width, root_height, root_Xpos, root_Ypos)) # set the dimensions of the screen and where it is placed
     #################################################
     #################################################
 
@@ -380,6 +402,7 @@ def GUI_Thread():
         TabStyle = ttk.Style()
         TabStyle.configure('TNotebook.Tab', font=('Helvetica', '12', 'bold'))
         #############
+        
         #################################################
     else:
         #################################################
@@ -392,17 +415,39 @@ def GUI_Thread():
     #################################################
     #################################################
 
+    #################################################
+    #################################################
+    if SpatialPrecision333_OPEN_FLAG == 1:
+        SpatialPrecision333_Object.CreateGUIobjects(TkinterParent=Tab_SpatialPrecision333)
+    #################################################
+    #################################################
+
+    #################################################
+    #################################################
+    if EntryListWithBlinking_OPEN_FLAG == 1:
+        EntryListWithBlinking_Object.CreateGUIobjects(TkinterParent=Tab_EntryListWithBlinking)
+    #################################################
+    #################################################
+
+    #################################################
+    #################################################
+    if MyPrint_OPEN_FLAG == 1:
+        MyPrint_Object.CreateGUIobjects(TkinterParent=Tab_MyPrint)
+    #################################################
+    #################################################
+
     ################################################# THIS BLOCK MUST COME 2ND-TO-LAST IN def GUI_Thread() IF USING TABS.
-    root.protocol("WM_DELETE_WINDOW", ExitProgram_Callback)  # Set the callback function for when the window's closed.
-    root.title("test_program_for_PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class")
-    root.geometry('%dx%d+%d+%d' % (root_width, root_height, root_Xpos, root_Ypos)) # set the dimensions of the screen and where it is placed
+    #################################################
     root.after(GUI_RootAfterCallbackInterval_Milliseconds, GUI_update_clock)
     root.mainloop()
     #################################################
+    #################################################
 
     #################################################  THIS BLOCK MUST COME LAST IN def GUI_Thread() REGARDLESS OF CODE.
+    #################################################
     root.quit() #Stop the GUI thread, MUST BE CALLED FROM GUI_Thread
     root.destroy() #Close down the GUI thread, MUST BE CALLED FROM GUI_Thread
+    #################################################
     #################################################
 
 ##########################################################################################################
@@ -410,7 +455,13 @@ def GUI_Thread():
 
 ##########################################################################################################
 ##########################################################################################################
+##########################################################################################################
+##########################################################################################################
 if __name__ == '__main__':
+
+    ##########################################################################################################
+    ##########################################################################################################
+    ##########################################################################################################
 
     #################################################
     #################################################
@@ -453,8 +504,11 @@ if __name__ == '__main__':
     global USE_MyPrint_FLAG
     USE_MyPrint_FLAG = 1
 
-    global USE_PLOTTER_FLAG
-    USE_PLOTTER_FLAG = 1
+    global USE_MyPlotterPureTkinterStandAloneProcess_FLAG
+    USE_MyPlotterPureTkinterStandAloneProcess_FLAG = 1
+
+    global USE_KEYBOARD_FLAG
+    USE_KEYBOARD_FLAG = 1
     #################################################
     #################################################
 
@@ -567,7 +621,7 @@ if __name__ == '__main__':
 
     #################################################
     #################################################
-    global PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3ClassObject
+    global SpatialPrecision333_Object
 
     global SpatialPrecision333_OPEN_FLAG
     SpatialPrecision333_OPEN_FLAG = -1
@@ -651,7 +705,7 @@ if __name__ == '__main__':
 
     #################################################
     #################################################
-    global EntryListWithBlinking_ReubenPython2and3ClassObject
+    global EntryListWithBlinking_Object
 
     global EntryListWithBlinking_OPEN_FLAG
     EntryListWithBlinking_OPEN_FLAG = -1
@@ -673,7 +727,7 @@ if __name__ == '__main__':
 
     #################################################
     #################################################
-    global MyPrint_ReubenPython2and3ClassObject
+    global MyPrint_Object
 
     global MyPrint_OPEN_FLAG
     MyPrint_OPEN_FLAG = -1
@@ -682,106 +736,106 @@ if __name__ == '__main__':
 
     #################################################
     #################################################
-    global MyPlotterPureTkinterStandAloneProcess_ReubenPython2and3ClassObject
+    global MyPlotterPureTkinterStandAloneProcess_Object
 
-    global PLOTTER_OPEN_FLAG
-    PLOTTER_OPEN_FLAG = -1
+    global MyPlotterPureTkinterStandAloneProcess_OPEN_FLAG
+    MyPlotterPureTkinterStandAloneProcess_OPEN_FLAG = -1
 
     global MyPlotterPureTkinter_MostRecentDict
     MyPlotterPureTkinter_MostRecentDict = dict()
 
-    global MyPlotterPureTkinterStandAloneProcess_ReubenPython2and3ClassObject_MostRecentDict_StandAlonePlottingProcess_ReadyForWritingFlag
-    MyPlotterPureTkinterStandAloneProcess_ReubenPython2and3ClassObject_MostRecentDict_StandAlonePlottingProcess_ReadyForWritingFlag = -1
+    global MyPlotterPureTkinterStandAloneProcess_MostRecentDict_ReadyForWritingFlag
+    MyPlotterPureTkinterStandAloneProcess_MostRecentDict_ReadyForWritingFlag = -1
 
-    global LastTime_MainLoopThread_PLOTTER
-    LastTime_MainLoopThread_PLOTTER = -11111.0
-    #################################################
-    #################################################
-
-    #################################################  KEY GUI LINE
-    #################################################
-    if USE_GUI_FLAG == 1:
-        print("Starting GUI thread...")
-        GUI_Thread_ThreadingObject = threading.Thread(target=GUI_Thread)
-        GUI_Thread_ThreadingObject.setDaemon(True) #Should mean that the GUI thread is destroyed automatically when the main thread is destroyed.
-        GUI_Thread_ThreadingObject.start()
-        time.sleep(0.5)  #Allow enough time for 'root' to be created that we can then pass it into other classes.
-    else:
-        root = None
-        Tab_MainControls = None
-        Tab_SpatialPrecision333 = None
-        Tab_EntryListWithBlinking = None
-        Tab_MyPrint = None
+    global LastTime_MainLoopThread_MyPlotterPureTkinterStandAloneProcess
+    LastTime_MainLoopThread_MyPlotterPureTkinterStandAloneProcess = -11111.0
     #################################################
     #################################################
 
-    #################################################
-    #################################################
-    global PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3ClassObject_GUIparametersDict
-    PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3ClassObject_GUIparametersDict = dict([("USE_GUI_FLAG", USE_GUI_FLAG and SHOW_IN_GUI_SpatialPrecision333_FLAG),
-                                    ("root", Tab_SpatialPrecision333),
-                                    ("EnableInternal_MyPrint_Flag", 1),
-                                    ("NumberOfPrintLines", 10),
-                                    ("UseBorderAroundThisGuiObjectFlag", 0),
-                                    ("GUI_ROW", GUI_ROW_SpatialPrecision333),
-                                    ("GUI_COLUMN", GUI_COLUMN_SpatialPrecision333),
-                                    ("GUI_PADX", GUI_PADX_SpatialPrecision333),
-                                    ("GUI_PADY", GUI_PADY_SpatialPrecision333),
-                                    ("GUI_ROWSPAN", GUI_ROWSPAN_SpatialPrecision333),
-                                    ("GUI_COLUMNSPAN", GUI_COLUMNSPAN_SpatialPrecision333)])
+    ##########################################################################################################
+    ##########################################################################################################
+    ##########################################################################################################
 
-    global PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3ClassObject_setup_dict
-    PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3ClassObject_setup_dict = dict([("GUIparametersDict", PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3ClassObject_GUIparametersDict),
-                                                                                        ("DesiredSerialNumber", -1), #-1 MEANS ANY SN, OR CHANGE THIS TO MATCH YOUR UNIQUE SERIAL NUMBER
-                                                                                        ("WaitForAttached_TimeoutDuration_Milliseconds", 5000),
-                                                                                        ("NameToDisplay_UserSet", "Reuben's Test SpatialPrecision333 Board"),
-                                                                                        ("UsePhidgetsLoggingInternalToThisClassObjectFlag", 1),
-                                                                                        ("SpatialAlgorithm", "IMU"), #IMU, AHRS, or None
-                                                                                        ("RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag", 1),
-                                                                                        ("RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseExponentialSmoothingFilterFlag", 1),
-                                                                                        ("RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_ExponentialSmoothingFilterLambda", 0.98), #For lambda: new_filtered_value = lambda * raw_sensor_value + (1 - lambda) * old_filtered_value
-                                                                                        ("PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag", 1),
-                                                                                        ("PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseExponentialSmoothingFilterFlag", 1),
-                                                                                        ("PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_ExponentialSmoothingFilterLambda", 0.98),
-                                                                                        ("YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag", 1),
-                                                                                        ("YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseExponentialSmoothingFilterFlag", 1),
-                                                                                        ("YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_ExponentialSmoothingFilterLambda", 0.98),
-                                                                                        ("Spatial_CallbackUpdateDeltaTmilliseconds", 2),
-                                                                                        ("DataCollectionDurationInSecondsForSnapshottingAndZeroing", 2.0),
-                                                                                        ("MainThread_TimeToSleepEachLoop", 0.001),
-                                                                                        ("HeatingEnabledToStabilizeSensorTemperature", True),
-                                                                                        ("ZeroGyrosAtStartOfProgramFlag", 0),
-                                                                                        ("ZeroAlgorithmAtStartOfProgramFlag", 0),
-                                                                                        ("AHRS_Parameters_angularVelocityThreshold", AHRS_Parameters_angularVelocityThreshold),
-                                                                                        ("AHRS_Parameters_angularVelocityDeltaThreshold", AHRS_Parameters_angularVelocityDeltaThreshold),
-                                                                                        ("AHRS_Parameters_accelerationThreshold", AHRS_Parameters_accelerationThreshold),
-                                                                                        ("AHRS_Parameters_magTime", AHRS_Parameters_magTime),
-                                                                                        ("AHRS_Parameters_accelTime", AHRS_Parameters_accelTime),
-                                                                                        ("AHRS_Parameters_biasTime", AHRS_Parameters_biasTime)])
+    ##########################################################################################################
+    ##########################################################################################################
+    ##########################################################################################################
+
+    #################################################
+    #################################################
+    global SpatialPrecision333_GUIparametersDict
+    SpatialPrecision333_GUIparametersDict = dict([("USE_GUI_FLAG", USE_GUI_FLAG and SHOW_IN_GUI_SpatialPrecision333_FLAG),
+                                                ("EnableInternal_MyPrint_Flag", 1),
+                                                ("NumberOfPrintLines", 10),
+                                                ("UseBorderAroundThisGuiObjectFlag", 0),
+                                                ("GUI_ROW", GUI_ROW_SpatialPrecision333),
+                                                ("GUI_COLUMN", GUI_COLUMN_SpatialPrecision333),
+                                                ("GUI_PADX", GUI_PADX_SpatialPrecision333),
+                                                ("GUI_PADY", GUI_PADY_SpatialPrecision333),
+                                                ("GUI_ROWSPAN", GUI_ROWSPAN_SpatialPrecision333),
+                                                ("GUI_COLUMNSPAN", GUI_COLUMNSPAN_SpatialPrecision333)])
+
+    global SpatialPrecision333_SetupDict
+    SpatialPrecision333_SetupDict = dict([("GUIparametersDict", SpatialPrecision333_GUIparametersDict),
+                                        ("DesiredSerialNumber", -1), #-1 MEANS ANY SN, OR CHANGE THIS TO MATCH YOUR UNIQUE SERIAL NUMBER
+                                        ("WaitForAttached_TimeoutDuration_Milliseconds", 5000),
+                                        ("NameToDisplay_UserSet", "Reuben's Test SpatialPrecision333 Board"),
+                                        ("UsePhidgetsLoggingInternalToThisClassObjectFlag", 1),
+                                        ("SpatialAlgorithm", "IMU"), #IMU, AHRS, or None
+                                        ("RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseExponentialSmoothingFilterFlag", 1),
+                                        ("RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_ExponentialSmoothingFilterLambda", 0.98), #For lambda: new_filtered_value = lambda * raw_sensor_value + (1 - lambda) * old_filtered_value
+                                        ("PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseExponentialSmoothingFilterFlag", 1),
+                                        ("PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_ExponentialSmoothingFilterLambda", 0.98),
+                                        ("YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseExponentialSmoothingFilterFlag", 1),
+                                        ("YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_ExponentialSmoothingFilterLambda", 0.98),
+                                        ("Spatial_CallbackUpdateDeltaTmilliseconds", 2),
+                                        ("DataCollectionDurationInSecondsForSnapshottingAndZeroing", 2.0),
+                                        ("MainThread_TimeToSleepEachLoop", 0.001),
+                                        ("HeatingEnabledToStabilizeSensorTemperature", True),
+                                        ("ZeroGyrosAtStartOfProgramFlag", 0),
+                                        ("ZeroAlgorithmAtStartOfProgramFlag", 0),
+                                        ("AHRS_Parameters_angularVelocityThreshold", AHRS_Parameters_angularVelocityThreshold),
+                                        ("AHRS_Parameters_angularVelocityDeltaThreshold", AHRS_Parameters_angularVelocityDeltaThreshold),
+                                        ("AHRS_Parameters_accelerationThreshold", AHRS_Parameters_accelerationThreshold),
+                                        ("AHRS_Parameters_magTime", AHRS_Parameters_magTime),
+                                        ("AHRS_Parameters_accelTime", AHRS_Parameters_accelTime),
+                                        ("AHRS_Parameters_biasTime", AHRS_Parameters_biasTime)])
 
     if USE_SpatialPrecision333_FLAG == 1:
         try:
-            PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3ClassObject = PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3ClassObject_setup_dict)
-            SpatialPrecision333_OPEN_FLAG = PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3ClassObject.OBJECT_CREATED_SUCCESSFULLY_FLAG
+            SpatialPrecision333_Object = PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(SpatialPrecision333_SetupDict)
+            SpatialPrecision333_OPEN_FLAG = SpatialPrecision333_Object.OBJECT_CREATED_SUCCESSFULLY_FLAG
 
         except:
             exceptions = sys.exc_info()[0]
-            print("PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3ClassObject __init__: Exceptions: %s" % exceptions, 0)
+            print("SpatialPrecision333_Object __init__: Exceptions: %s" % exceptions, 0)
             traceback.print_exc()
     #################################################
     #################################################
 
     #################################################
     #################################################
-    global EntryListWithBlinking_ReubenPython2and3ClassObject_GUIparametersDict
-    EntryListWithBlinking_ReubenPython2and3ClassObject_GUIparametersDict = dict([("root", Tab_EntryListWithBlinking),
-                                    ("UseBorderAroundThisGuiObjectFlag", 0),
-                                    ("GUI_ROW", GUI_ROW_EntryListWithBlinking),
-                                    ("GUI_COLUMN", GUI_COLUMN_EntryListWithBlinking),
-                                    ("GUI_PADX", GUI_PADX_EntryListWithBlinking),
-                                    ("GUI_PADY", GUI_PADY_EntryListWithBlinking),
-                                    ("GUI_ROWSPAN", GUI_ROWSPAN_EntryListWithBlinking),
-                                    ("GUI_COLUMNSPAN", GUI_COLUMNSPAN_EntryListWithBlinking)])
+    if USE_SpatialPrecision333_FLAG == 1:
+        if EXIT_PROGRAM_FLAG == 0:
+            if SpatialPrecision333_OPEN_FLAG != 1:
+                print("Failed to open SpatialPrecision333_ReubenPython2and3Class.")
+                ExitProgram_Callback()
+    #################################################
+    #################################################
+
+    ##########################################################################################################
+    ##########################################################################################################
+    ##########################################################################################################
+
+    #################################################
+    #################################################
+    global EntryListWithBlinking_GUIparametersDict
+    EntryListWithBlinking_GUIparametersDict = dict([("UseBorderAroundThisGuiObjectFlag", 0),
+                                                    ("GUI_ROW", GUI_ROW_EntryListWithBlinking),
+                                                    ("GUI_COLUMN", GUI_COLUMN_EntryListWithBlinking),
+                                                    ("GUI_PADX", GUI_PADX_EntryListWithBlinking),
+                                                    ("GUI_PADY", GUI_PADY_EntryListWithBlinking),
+                                                    ("GUI_ROWSPAN", GUI_ROWSPAN_EntryListWithBlinking),
+                                                    ("GUI_COLUMNSPAN", GUI_COLUMNSPAN_EntryListWithBlinking)])
     
     global EntryListWithBlinking_Variables_ListOfDicts
     EntryListWithBlinking_Variables_ListOfDicts = [dict([("Name", "AHRS_Parameters_angularVelocityThreshold"), ("Type", "float"), ("StartingVal", AHRS_Parameters_angularVelocityThreshold), ("EntryBlinkEnabled", 0), ("EntryWidth", EntryWidth),("LabelWidth", LabelWidth),("FontSize", FontSize)]),
@@ -791,19 +845,69 @@ if __name__ == '__main__':
                                                    dict([("Name", "AHRS_Parameters_accelTime"), ("Type", "float"), ("StartingVal", AHRS_Parameters_accelTime), ("EntryBlinkEnabled", 0),("EntryWidth", EntryWidth),("LabelWidth", LabelWidth), ("FontSize", FontSize)]),
                                                    dict([("Name", "AHRS_Parameters_biasTime"), ("Type", "float"), ("StartingVal", AHRS_Parameters_biasTime), ("EntryBlinkEnabled", 0),("EntryWidth", EntryWidth),("LabelWidth", LabelWidth), ("FontSize", FontSize)])]
 
-    global EntryListWithBlinking_ReubenPython2and3ClassObject_setup_dict
-    EntryListWithBlinking_ReubenPython2and3ClassObject_setup_dict = dict([("GUIparametersDict", EntryListWithBlinking_ReubenPython2and3ClassObject_GUIparametersDict),
-                                                                          ("EntryListWithBlinking_Variables_ListOfDicts", EntryListWithBlinking_Variables_ListOfDicts),
-                                                                          ("DebugByPrintingVariablesFlag", 0),
-                                                                          ("LoseFocusIfMouseLeavesEntryFlag", 0)])
+    global EntryListWithBlinking_SetupDict
+    EntryListWithBlinking_SetupDict = dict([("GUIparametersDict", EntryListWithBlinking_GUIparametersDict),
+                                          ("EntryListWithBlinking_Variables_ListOfDicts", EntryListWithBlinking_Variables_ListOfDicts),
+                                          ("DebugByPrintingVariablesFlag", 0),
+                                          ("LoseFocusIfMouseLeavesEntryFlag", 0)])
+
     if USE_EntryListWithBlinking_FLAG == 1:
         try:
-            EntryListWithBlinking_ReubenPython2and3ClassObject = EntryListWithBlinking_ReubenPython2and3Class(EntryListWithBlinking_ReubenPython2and3ClassObject_setup_dict)
-            EntryListWithBlinking_OPEN_FLAG = EntryListWithBlinking_ReubenPython2and3ClassObject.OBJECT_CREATED_SUCCESSFULLY_FLAG
+            EntryListWithBlinking_Object = EntryListWithBlinking_ReubenPython2and3Class(EntryListWithBlinking_SetupDict)
+            EntryListWithBlinking_OPEN_FLAG = EntryListWithBlinking_Object.OBJECT_CREATED_SUCCESSFULLY_FLAG
 
         except:
             exceptions = sys.exc_info()[0]
-            print("EntryListWithBlinking_ReubenPython2and3ClassObject __init__: Exceptions: %s" % exceptions, 0)
+            print("EntryListWithBlinking_Object __init__: Exceptions: %s" % exceptions, 0)
+            traceback.print_exc()
+    #################################################
+    #################################################
+
+    #################################################
+    #################################################
+    if USE_EntryListWithBlinking_FLAG == 1:
+        if EXIT_PROGRAM_FLAG == 0:
+            if EntryListWithBlinking_OPEN_FLAG != 1:
+                print("Failed to open EntryListWithBlinking_ReubenPython2and3Class.")
+                ExitProgram_Callback()
+    #################################################
+    #################################################
+
+    ##########################################################################################################
+    ##########################################################################################################
+    ##########################################################################################################
+
+    ##########################################################################################################
+    ##########################################################################################################
+    ##########################################################################################################
+
+    #################################################
+    #################################################
+    global MyPrint_Object_GUIparametersDict
+    MyPrint_Object_GUIparametersDict = dict([("USE_GUI_FLAG", USE_GUI_FLAG and SHOW_IN_GUI_MyPrint_FLAG),
+                                            ("UseBorderAroundThisGuiObjectFlag", 0),
+                                            ("GUI_ROW", GUI_ROW_MyPrint),
+                                            ("GUI_COLUMN", GUI_COLUMN_MyPrint),
+                                            ("GUI_PADX", GUI_PADX_MyPrint),
+                                            ("GUI_PADY", GUI_PADY_MyPrint),
+                                            ("GUI_ROWSPAN", GUI_ROWSPAN_MyPrint),
+                                            ("GUI_COLUMNSPAN", GUI_COLUMNSPAN_MyPrint)])
+
+    global MyPrint_Object_SetupDict
+    MyPrint_Object_SetupDict = dict([("NumberOfPrintLines", 10),
+                                    ("WidthOfPrintingLabel", 200),
+                                    ("PrintToConsoleFlag", 1),
+                                    ("LogFileNameFullPath", os.path.join(os.getcwd(), "TestLog.txt")),
+                                    ("GUIparametersDict", MyPrint_Object_GUIparametersDict)])
+
+    if USE_MyPrint_FLAG == 1 and EXIT_PROGRAM_FLAG == 0:
+        try:
+            MyPrint_Object = MyPrint_ReubenPython2and3Class(MyPrint_Object_SetupDict)
+            MyPrint_OPEN_FLAG = MyPrint_Object.OBJECT_CREATED_SUCCESSFULLY_FLAG
+
+        except:
+            exceptions = sys.exc_info()[0]
+            print("MyPrint_Object __init__: Exceptions: %s" % exceptions)
             traceback.print_exc()
     #################################################
     #################################################
@@ -811,115 +915,123 @@ if __name__ == '__main__':
     #################################################
     #################################################
     if USE_MyPrint_FLAG == 1:
+        if EXIT_PROGRAM_FLAG == 0:
+            if MyPrint_OPEN_FLAG != 1:
+                print("Failed to open MyPrint_Object.")
+                ExitProgram_Callback()
+    #################################################
+    #################################################
 
-        MyPrint_ReubenPython2and3ClassObject_GUIparametersDict = dict([("USE_GUI_FLAG", USE_GUI_FLAG and SHOW_IN_GUI_MyPrint_FLAG),
-                                                                        ("root", Tab_MyPrint),
-                                                                        ("UseBorderAroundThisGuiObjectFlag", 0),
-                                                                        ("GUI_ROW", GUI_ROW_MyPrint),
-                                                                        ("GUI_COLUMN", GUI_COLUMN_MyPrint),
-                                                                        ("GUI_PADX", GUI_PADX_MyPrint),
-                                                                        ("GUI_PADY", GUI_PADY_MyPrint),
-                                                                        ("GUI_ROWSPAN", GUI_ROWSPAN_MyPrint),
-                                                                        ("GUI_COLUMNSPAN", GUI_COLUMNSPAN_MyPrint)])
+    ##########################################################################################################
+    ##########################################################################################################
+    ##########################################################################################################
 
-        MyPrint_ReubenPython2and3ClassObject_setup_dict = dict([("NumberOfPrintLines", 10),
-                                                                ("WidthOfPrintingLabel", 200),
-                                                                ("PrintToConsoleFlag", 1),
-                                                                ("LogFileNameFullPath", os.getcwd() + "//TestLog.txt"),
-                                                                ("GUIparametersDict", MyPrint_ReubenPython2and3ClassObject_GUIparametersDict)])
+    ###########################################################################################################
+    ##########################################################################################################
+    ##########################################################################################################
 
+    #################################################
+    #################################################
+    global MyPlotterPureTkinterStandAloneProcess_GUIparametersDict
+    MyPlotterPureTkinterStandAloneProcess_GUIparametersDict = dict([("EnableInternal_MyPrint_Flag", 1),
+                                                                    ("NumberOfPrintLines", 10),
+                                                                    ("GraphCanvasWidth", 900),
+                                                                    ("GraphCanvasHeight", 700),
+                                                                    ("GraphCanvasWindowStartingX", 0),
+                                                                    ("GraphCanvasWindowStartingY", 0),
+                                                                    ("GraphCanvasWindowTitle", "My plotting example!"),
+                                                                    ("GUI_RootAfterCallbackInterval_Milliseconds_IndependentOfParentRootGUIloopEvents", 30)])
+
+
+    global MyPlotterPureTkinterStandAloneProcess_SetupDict
+    MyPlotterPureTkinterStandAloneProcess_SetupDict = dict([("GUIparametersDict", MyPlotterPureTkinterStandAloneProcess_GUIparametersDict),
+                                                            ("ParentPID", os.getpid()),
+                                                            ("WatchdogTimerDurationSeconds_ExpirationWillEndStandAlonePlottingProcess", 5.0),
+                                                            ("CurvesToPlotNamesAndColorsDictOfLists", dict([("NameList", ["Roll", "Pitch", "Yaw"]),
+                                                                                                        ("MarkerSizeList", [2, 2, 2]),
+                                                                                                        ("LineWidthList", [2, 2, 2]),
+                                                                                                        ("IncludeInXaxisAutoscaleCalculationList", [1, 1, 1]),
+                                                                                                        ("IncludeInYaxisAutoscaleCalculationList", [1, 1, 1]),
+                                                                                                        ("ColorList", ["Red", "Green", "Blue"])])),
+                                                            ("SmallTextSize", 7),
+                                                            ("LargeTextSize", 12),
+                                                            ("NumberOfDataPointToPlot", 100),
+                                                            ("XaxisNumberOfTickMarks", 10),
+                                                            ("YaxisNumberOfTickMarks", 10),
+                                                            ("XaxisNumberOfDecimalPlacesForLabels", 3),
+                                                            ("YaxisNumberOfDecimalPlacesForLabels", 3),
+                                                            ("XaxisAutoscaleFlag", 1),
+                                                            ("YaxisAutoscaleFlag", 1),
+                                                            ("X_min", 0.0),
+                                                            ("X_max", 5.0),
+                                                            ("Y_min", -5.0),
+                                                            ("Y_max", 5.0),
+                                                            ("XaxisDrawnAtBottomOfGraph", 0),
+                                                            ("XaxisLabelString", "Time (sec)"),
+                                                            ("YaxisLabelString", "Y-units (units)"),
+                                                            ("ShowLegendFlag", 1),
+                                                            ("GraphNumberOfLeadingZeros", 0),
+                                                            ("GraphNumberOfDecimalPlaces", 3),
+                                                            ("SavePlot_DirectoryPath", os.path.join(os.getcwd(), "SavedImagesFolder")),
+                                                            ("KeepPlotterWindowAlwaysOnTopFlag", 0),
+                                                            ("RemoveTitleBorderCloseButtonAndDisallowWindowMoveFlag", 0),
+                                                            ("AllowResizingOfWindowFlag", 1)])
+
+    if USE_MyPlotterPureTkinterStandAloneProcess_FLAG == 1:
         try:
-            MyPrint_ReubenPython2and3ClassObject = MyPrint_ReubenPython2and3Class(MyPrint_ReubenPython2and3ClassObject_setup_dict)
-            MyPrint_OPEN_FLAG = MyPrint_ReubenPython2and3ClassObject.OBJECT_CREATED_SUCCESSFULLY_FLAG
+            MyPlotterPureTkinterStandAloneProcess_Object = MyPlotterPureTkinterStandAloneProcess_ReubenPython2and3Class(MyPlotterPureTkinterStandAloneProcess_SetupDict)
+            MyPlotterPureTkinterStandAloneProcess_OPEN_FLAG = MyPlotterPureTkinterStandAloneProcess_Object.OBJECT_CREATED_SUCCESSFULLY_FLAG
 
         except:
             exceptions = sys.exc_info()[0]
-            print("MyPrint_ReubenPython2and3ClassObject __init__: Exceptions: %s" % exceptions)
+            print("MyPlotterPureTkinterStandAloneProcess_Object, exceptions: %s" % exceptions)
             traceback.print_exc()
     #################################################
     #################################################
 
     #################################################
     #################################################
-    global MyPlotterPureTkinterStandAloneProcess_ReubenPython2and3ClassObject_GUIparametersDict
-    MyPlotterPureTkinterStandAloneProcess_ReubenPython2and3ClassObject_GUIparametersDict = dict([("EnableInternal_MyPrint_Flag", 1),
-                                                                                                ("NumberOfPrintLines", 10),
-                                                                                                ("UseBorderAroundThisGuiObjectFlag", 0),
-                                                                                                ("GraphCanvasWidth", 890),
-                                                                                                ("GraphCanvasHeight", 700),
-                                                                                                ("GraphCanvasWindowStartingX", 0),
-                                                                                                ("GraphCanvasWindowStartingY", 0),
-                                                                                                ("GUI_RootAfterCallbackInterval_Milliseconds_IndependentOfParentRootGUIloopEvents", 20)])
-
-    global MyPlotterPureTkinterStandAloneProcess_ReubenPython2and3ClassObject_setup_dict
-    MyPlotterPureTkinterStandAloneProcess_ReubenPython2and3ClassObject_setup_dict = dict([("GUIparametersDict", MyPlotterPureTkinterStandAloneProcess_ReubenPython2and3ClassObject_GUIparametersDict),
-                                                                                        ("ParentPID", os.getpid()),
-                                                                                        ("WatchdogTimerExpirationDurationSeconds_StandAlonePlottingProcess", 0.0),
-                                                                                        ("MarkerSize", 3),
-                                                                                        ("CurvesToPlotNamesAndColorsDictOfLists", dict([("NameList", ["Roll", "Pitch", "Yaw"]),("ColorList", ["Red", "Green", "Blue"])])),
-                                                                                        ("NumberOfDataPointToPlot", 50),
-                                                                                        ("XaxisNumberOfTickMarks", 10),
-                                                                                        ("YaxisNumberOfTickMarks", 10),
-                                                                                        ("XaxisNumberOfDecimalPlacesForLabels", 3),
-                                                                                        ("YaxisNumberOfDecimalPlacesForLabels", 3),
-                                                                                        ("XaxisAutoscaleFlag", 1),
-                                                                                        ("YaxisAutoscaleFlag", 1),
-                                                                                        ("X_min", 0.0),
-                                                                                        ("X_max", 20.0),
-                                                                                        ("Y_min", -0.0015),
-                                                                                        ("Y_max", 0.0015),
-                                                                                        ("XaxisDrawnAtBottomOfGraph", 0),
-                                                                                        ("XaxisLabelString", "Time (sec)"),
-                                                                                        ("YaxisLabelString", "Y-units (units)"),
-                                                                                        ("ShowLegendFlag", 1)])
-
-    if USE_PLOTTER_FLAG == 1:
-        try:
-            MyPlotterPureTkinterStandAloneProcess_ReubenPython2and3ClassObject = MyPlotterPureTkinterStandAloneProcess_ReubenPython2and3Class(MyPlotterPureTkinterStandAloneProcess_ReubenPython2and3ClassObject_setup_dict)
-            PLOTTER_OPEN_FLAG = MyPlotterPureTkinterStandAloneProcess_ReubenPython2and3ClassObject.OBJECT_CREATED_SUCCESSFULLY_FLAG
-
-        except:
-            exceptions = sys.exc_info()[0]
-            print("MyPlotterPureTkinterStandAloneProcess_ReubenPython2and3ClassObject, exceptions: %s" % exceptions)
-            traceback.print_exc()
+    if USE_MyPlotterPureTkinterStandAloneProcess_FLAG == 1:
+        if EXIT_PROGRAM_FLAG == 0:
+            if MyPlotterPureTkinterStandAloneProcess_OPEN_FLAG != 1:
+                print("Failed to open MyPlotterPureTkinterStandAloneProcess_ReubenPython2and3Class.")
+                ExitProgram_Callback()
     #################################################
     #################################################
 
-    #################################################
-    #################################################
-    if USE_SpatialPrecision333_FLAG == 1 and SpatialPrecision333_OPEN_FLAG != 1:
-        print("Failed to open PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class.")
-        #ExitProgram_Callback()
-    #################################################
-    #################################################
+    ##########################################################################################################
+    ##########################################################################################################
+    ##########################################################################################################
 
-    #################################################
-    #################################################
-    if USE_EntryListWithBlinking_FLAG == 1 and EntryListWithBlinking_OPEN_FLAG != 1:
-        print("Failed to open EntryListWithBlinking_ReubenPython2and3Class.")
-        #ExitProgram_Callback()
-    #################################################
-    #################################################
+    ##########################################################################################################
+    ##########################################################################################################
+    ##########################################################################################################
+    if USE_KEYBOARD_FLAG == 1 and EXIT_PROGRAM_FLAG == 0:
+        keyboard.on_press_key("esc", ExitProgram_Callback)
+    ##########################################################################################################
+    ##########################################################################################################
+    ##########################################################################################################
 
-    #################################################
-    #################################################
-    if USE_MyPrint_FLAG == 1 and MyPrint_OPEN_FLAG != 1:
-        print("Failed to open MyPrint_ReubenPython2and3ClassObject.")
-        #ExitProgram_Callback()
-    #################################################
-    #################################################
+    ########################################################################################################## KEY GUI LINE
+    ##########################################################################################################
+    ##########################################################################################################
+    if USE_GUI_FLAG == 1 and EXIT_PROGRAM_FLAG == 0:
+        print("Starting GUI thread...")
+        GUI_Thread_ThreadingObject = threading.Thread(target=GUI_Thread, daemon=True) #Daemon=True means that the GUI thread is destroyed automatically when the main thread is destroyed.
+        GUI_Thread_ThreadingObject.start()
+    else:
+        root = None
+        Tab_MainControls = None
+        Tab_SpatialPrecision333 = None
+        Tab_EntryListWithBlinking = None
+        Tab_MyPrint = None
+    ##########################################################################################################
+    ##########################################################################################################
+    ##########################################################################################################
 
-    #################################################
-    #################################################
-    if USE_PLOTTER_FLAG == 1 and PLOTTER_OPEN_FLAG != 1:
-        print("Failed to open MyPlotterPureTkinterClass_Object.")
-        #ExitProgram_Callback()
-    #################################################
-    #################################################
-
-    ####################################################
-    ####################################################
-    ####################################################
+    ##########################################################################################################
+    ##########################################################################################################
+    ##########################################################################################################
     print("Starting main loop 'test_program_for_PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class.")
     StartingTime_MainLoopThread = getPreciseSecondsTimeStampString()
 
@@ -935,7 +1047,7 @@ if __name__ == '__main__':
         ####################################################
         if SpatialPrecision333_OPEN_FLAG == 1:
 
-            SpatialPrecision333_MostRecentDict = PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3ClassObject.GetMostRecentDataDict()
+            SpatialPrecision333_MostRecentDict = SpatialPrecision333_Object.GetMostRecentDataDict()
 
             if "Time" in SpatialPrecision333_MostRecentDict:
                 SpatialPrecision333_MostRecentDict_Quaternions_DirectFromDataEventHandler = SpatialPrecision333_MostRecentDict["Quaternions_DirectFromDataEventHandler"]
@@ -955,7 +1067,7 @@ if __name__ == '__main__':
         ################################################### GET's
         if EntryListWithBlinking_OPEN_FLAG == 1:
 
-            EntryListWithBlinking_MostRecentDict = EntryListWithBlinking_ReubenPython2and3ClassObject.GetMostRecentDataDict()
+            EntryListWithBlinking_MostRecentDict = EntryListWithBlinking_Object.GetMostRecentDataDict()
 
             if "DataUpdateNumber" in EntryListWithBlinking_MostRecentDict and EntryListWithBlinking_MostRecentDict["DataUpdateNumber"] != EntryListWithBlinking_MostRecentDict_DataUpdateNumber_last:
                 EntryListWithBlinking_MostRecentDict_DataUpdateNumber = EntryListWithBlinking_MostRecentDict["DataUpdateNumber"]
@@ -968,7 +1080,7 @@ if __name__ == '__main__':
                 AHRS_Parameters_biasTime = EntryListWithBlinking_MostRecentDict["AHRS_Parameters_biasTime"]
 
                 if SpatialPrecision333_OPEN_FLAG == 1:
-                    PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3ClassObject.SetAHRSParameters_MyFunction(AHRS_Parameters_angularVelocityThreshold,
+                    SpatialPrecision333_Object.SetAHRSParameters_MyFunction(AHRS_Parameters_angularVelocityThreshold,
                                                                                                                           AHRS_Parameters_angularVelocityDeltaThreshold,
                                                                                                                           AHRS_Parameters_accelerationThreshold,
                                                                                                                           AHRS_Parameters_magTime,
@@ -988,24 +1100,24 @@ if __name__ == '__main__':
 
         ####################################################
         ####################################################
-        if PLOTTER_OPEN_FLAG == 1:
+        if MyPlotterPureTkinterStandAloneProcess_OPEN_FLAG == 1:
 
             ####################################################
-            MyPlotterPureTkinterStandAloneProcess_ReubenPython2and3ClassObject_MostRecentDict = MyPlotterPureTkinterStandAloneProcess_ReubenPython2and3ClassObject.GetMostRecentDataDict()
+            MyPlotterPureTkinterStandAloneProcess_MostRecentDict = MyPlotterPureTkinterStandAloneProcess_Object.GetMostRecentDataDict()
 
-            if "StandAlonePlottingProcess_ReadyForWritingFlag" in MyPlotterPureTkinterStandAloneProcess_ReubenPython2and3ClassObject_MostRecentDict:
-                MyPlotterPureTkinterStandAloneProcess_ReubenPython2and3ClassObject_MostRecentDict_StandAlonePlottingProcess_ReadyForWritingFlag = MyPlotterPureTkinterStandAloneProcess_ReubenPython2and3ClassObject_MostRecentDict["StandAlonePlottingProcess_ReadyForWritingFlag"]
+            if "StandAlonePlottingProcess_ReadyForWritingFlag" in MyPlotterPureTkinterStandAloneProcess_MostRecentDict:
+                MyPlotterPureTkinterStandAloneProcess_MostRecentDict_ReadyForWritingFlag = MyPlotterPureTkinterStandAloneProcess_MostRecentDict["StandAlonePlottingProcess_ReadyForWritingFlag"]
 
-                if MyPlotterPureTkinterStandAloneProcess_ReubenPython2and3ClassObject_MostRecentDict_StandAlonePlottingProcess_ReadyForWritingFlag == 1:
-                    if CurrentTime_MainLoopThread - LastTime_MainLoopThread_PLOTTER >= 0.030:
+                if MyPlotterPureTkinterStandAloneProcess_MostRecentDict_ReadyForWritingFlag == 1:
+                    if CurrentTime_MainLoopThread - LastTime_MainLoopThread_MyPlotterPureTkinterStandAloneProcess >= 0.031:
                         #print([SpatialPrecision333_MostRecentDict_Time]*3)
                         #print(SpatialPrecision333_MostRecentDict_RollPitchYaw_AbtXYZ_Dict["RollPitchYaw_AbtXYZ_List_Degrees"])
-                        #MyPlotterPureTkinterStandAloneProcess_ReubenPython2and3ClassObject.ExternalAddPointOrListOfPointsToPlot(["Roll", "Pitch", "Yaw"], [SpatialPrecision333_MostRecentDict_Time]*3, SpatialPrecision333_MostRecentDict_RollPitchYaw_AbtXYZ_Dict["RollPitchYaw_AbtXYZ_List_Degrees"])
-                        #MyPlotterPureTkinterStandAloneProcess_ReubenPython2and3ClassObject.ExternalAddPointOrListOfPointsToPlot(["Roll", "Pitch", "Yaw"], [SpatialPrecision333_MostRecentDict_Time]*3, SpatialPrecision333_MostRecentDict_RollPitchYaw_Rate_AbtXYZ_Dict["RollPitchYaw_Rate_AbtXYZ_List_DegreesPerSecond"])
-                        MyPlotterPureTkinterStandAloneProcess_ReubenPython2and3ClassObject.ExternalAddPointOrListOfPointsToPlot(["Pitch"], [SpatialPrecision333_MostRecentDict_Time]*1, [SpatialPrecision333_MostRecentDict_RollPitchYaw_AbtXYZ_Dict["RollPitchYaw_AbtXYZ_List_Degrees"][1]])
+                        #MyPlotterPureTkinterStandAloneProcess_Object.ExternalAddPointOrListOfPointsToPlot(["Roll", "Pitch", "Yaw"], [SpatialPrecision333_MostRecentDict_Time]*3, SpatialPrecision333_MostRecentDict_RollPitchYaw_AbtXYZ_Dict["RollPitchYaw_AbtXYZ_List_Degrees"])
+                        #MyPlotterPureTkinterStandAloneProcess_Object.ExternalAddPointOrListOfPointsToPlot(["Roll", "Pitch", "Yaw"], [SpatialPrecision333_MostRecentDict_Time]*3, SpatialPrecision333_MostRecentDict_RollPitchYaw_Rate_AbtXYZ_Dict["RollPitchYaw_Rate_AbtXYZ_List_DegreesPerSecond"])
+                        MyPlotterPureTkinterStandAloneProcess_Object.ExternalAddPointOrListOfPointsToPlot(["Pitch"], [SpatialPrecision333_MostRecentDict_Time]*1, [SpatialPrecision333_MostRecentDict_RollPitchYaw_AbtXYZ_Dict["RollPitchYaw_AbtXYZ_List_Degrees"][1]])
 
 
-                        LastTime_MainLoopThread_PLOTTER = CurrentTime_MainLoopThread
+                        LastTime_MainLoopThread_MyPlotterPureTkinterStandAloneProcess = CurrentTime_MainLoopThread
             ####################################################
 
         ####################################################
@@ -1018,36 +1130,40 @@ if __name__ == '__main__':
         ####################################################
         ####################################################
 
-    ####################################################
-    ####################################################
-    ####################################################
+    ##########################################################################################################
+    ##########################################################################################################
+    ##########################################################################################################
 
-    ################################################# THIS IS THE EXIT ROUTINE!
-    #################################################
+    ########################################################################################################## THIS IS THE EXIT ROUTINE!
+    ##########################################################################################################
+    ##########################################################################################################
     print("Exiting main program 'test_program_for_PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class.")
 
     #################################################
     if SpatialPrecision333_OPEN_FLAG == 1:
-        PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3ClassObject.ExitProgram_Callback()
+        SpatialPrecision333_Object.ExitProgram_Callback()
     #################################################
 
     #################################################
     if EntryListWithBlinking_OPEN_FLAG == 1:
-        EntryListWithBlinking_ReubenPython2and3ClassObject.ExitProgram_Callback()
+        EntryListWithBlinking_Object.ExitProgram_Callback()
     #################################################
 
     #################################################
     if MyPrint_OPEN_FLAG == 1:
-        MyPrint_ReubenPython2and3ClassObject.ExitProgram_Callback()
+        MyPrint_Object.ExitProgram_Callback()
     #################################################
 
     #################################################
-    if PLOTTER_OPEN_FLAG == 1:
-        MyPlotterPureTkinterStandAloneProcess_ReubenPython2and3ClassObject.ExitProgram_Callback()
+    if MyPlotterPureTkinterStandAloneProcess_OPEN_FLAG == 1:
+        MyPlotterPureTkinterStandAloneProcess_Object.ExitProgram_Callback()
     #################################################
 
-    #################################################
-    #################################################
+    ##########################################################################################################
+    ##########################################################################################################
+    ##########################################################################################################
 
+##########################################################################################################
+##########################################################################################################
 ##########################################################################################################
 ##########################################################################################################

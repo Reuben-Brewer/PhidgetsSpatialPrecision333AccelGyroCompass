@@ -6,12 +6,20 @@ reuben.brewer@gmail.com
 www.reubotics.com
 
 Apache 2 License
-Software Revision J, 08/31/2024
+Software Revision K, 12/28/2025
 
-Verified working on: Python 2.7, 3.8 for Windows 8.1, 10 64-bit and Raspberry Pi Buster (does not work on Mac).
+Verified working on: Python 3.11/12/13 for Windows 10/11 64-bit and Raspberry Pi Bookworm (does not work on Mac in GUI mode).
 '''
 
 __author__ = 'reuben.brewer'
+
+##########################################################################################################
+##########################################################################################################
+
+#########################################################
+import ReubenGithubCodeModulePaths #Replaces the need to have "ReubenGithubCodeModulePaths.pth" within "C:\Anaconda3\Lib\site-packages".
+ReubenGithubCodeModulePaths.Enable()
+#########################################################
 
 ###########################################################
 from LowPassFilter_ReubenPython2and3Class import *
@@ -28,34 +36,16 @@ import math
 import collections
 from copy import * #for deepcopy
 import inspect #To enable 'TellWhichFileWereIn'
+import queue as Queue
 import threading
 import traceback
 ###########################################################
 
 ###########################################################
-if sys.version_info[0] < 3:
-    from Tkinter import * #Python 2
-    import tkFont
-    import ttk
-else:
-    from tkinter import * #Python 3
-    import tkinter.font as tkFont #Python 3
-    from tkinter import ttk
+from tkinter import *
+import tkinter.font as tkFont
+from tkinter import ttk
 ###########################################################
-
-###########################################################
-if sys.version_info[0] < 3:
-    import Queue  # Python 2
-else:
-    import queue as Queue  # Python 3
-###########################################################
-
-###########################################################
-if sys.version_info[0] < 3:
-    from builtins import raw_input as input
-else:
-    from future.builtins import input as input
-########################################################### "sudo pip3 install future" (Python 3) AND "sudo pip install future" (Python 2)
 
 ###########################################################
 import platform
@@ -82,11 +72,23 @@ from Phidget22.Devices.Spatial import *
 from Phidget22.Devices.TemperatureSensor import *
 ###########################################################
 
+#######################################################################################################################
+#######################################################################################################################
+#######################################################################################################################
+#######################################################################################################################
+#######################################################################################################################
+
 class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
 
     #######################################################################################################################
     #######################################################################################################################
-    def __init__(self, setup_dict): #Subclass the Tkinter Frame
+    #######################################################################################################################
+    #######################################################################################################################
+    def __init__(self, SetupDict): #Subclass the Tkinter Frame
+
+        #######################################################################################################################
+        #######################################################################################################################
+        #######################################################################################################################
 
         print("#################### PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class __init__ starting. ####################")
 
@@ -189,25 +191,30 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
 
         #########################################################
         #########################################################
-        self.RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_MyLowPassFilterClass_Object = LowPassFilter_ReubenPython2and3Class(dict([
+        self.RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_LowPassFilterClass_Object = LowPassFilter_ReubenPython2and3Class(dict([
                     ("UseMedianFilterFlag", 0),
                     ("UseExponentialSmoothingFilterFlag", 0),
                     ("ExponentialSmoothingFilterLambda", 1.0)]))
 
-        self.PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_MyLowPassFilterClass_Object = LowPassFilter_ReubenPython2and3Class(dict([
+        self.PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_LowPassFilterClass_Object = LowPassFilter_ReubenPython2and3Class(dict([
                     ("UseMedianFilterFlag", 0),
                     ("UseExponentialSmoothingFilterFlag", 0),
                     ("ExponentialSmoothingFilterLambda", 1.0)]))
 
-        self.YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_MyLowPassFilterClass_Object = LowPassFilter_ReubenPython2and3Class(dict([
+        self.YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_LowPassFilterClass_Object = LowPassFilter_ReubenPython2and3Class(dict([
                     ("UseMedianFilterFlag", 0),
                     ("UseExponentialSmoothingFilterFlag", 0),
                     ("ExponentialSmoothingFilterLambda", 1.0)]))
         #########################################################
         #########################################################
 
-        #########################################################
-        #########################################################
+        #######################################################################################################################
+        #######################################################################################################################
+        #######################################################################################################################
+
+        #######################################################################################################################
+        #######################################################################################################################
+        #######################################################################################################################
         if platform.system() == "Linux":
 
             if "raspberrypi" in platform.uname(): #os.uname() doesn't work in windows
@@ -225,13 +232,18 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
             self.my_platform = "other"
 
         print("PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class __init__: The OS platform is: " + self.my_platform)
-        #########################################################
-        #########################################################
+        #######################################################################################################################
+        #######################################################################################################################
+        #######################################################################################################################
+
+        #######################################################################################################################
+        #######################################################################################################################
+        #######################################################################################################################
 
         #########################################################
         #########################################################
-        if "GUIparametersDict" in setup_dict:
-            self.GUIparametersDict = setup_dict["GUIparametersDict"]
+        if "GUIparametersDict" in SetupDict:
+            self.GUIparametersDict = SetupDict["GUIparametersDict"]
 
             #########################################################
             if "USE_GUI_FLAG" in self.GUIparametersDict:
@@ -240,14 +252,6 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
                 self.USE_GUI_FLAG = 0
 
             print("PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class __init__: USE_GUI_FLAG: " + str(self.USE_GUI_FLAG))
-            #########################################################
-
-            #########################################################
-            if "root" in self.GUIparametersDict:
-                self.root = self.GUIparametersDict["root"]
-            else:
-                print("PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class __init__: Error, must pass in 'root'")
-                return
             #########################################################
 
             #########################################################
@@ -360,9 +364,9 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
 
         #########################################################
         #########################################################
-        if "DesiredSerialNumber" in setup_dict:
+        if "DesiredSerialNumber" in SetupDict:
             try:
-                self.DesiredSerialNumber = int(setup_dict["DesiredSerialNumber"])
+                self.DesiredSerialNumber = int(SetupDict["DesiredSerialNumber"])
             except:
                 print("PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class __init__: Error, DesiredSerialNumber invalid.")
         else:
@@ -374,8 +378,8 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
 
         #########################################################
         #########################################################
-        if "NameToDisplay_UserSet" in setup_dict:
-            self.NameToDisplay_UserSet = str(setup_dict["NameToDisplay_UserSet"])
+        if "NameToDisplay_UserSet" in SetupDict:
+            self.NameToDisplay_UserSet = str(SetupDict["NameToDisplay_UserSet"])
         else:
             self.NameToDisplay_UserSet = ""
 
@@ -385,8 +389,8 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
 
         #########################################################
         #########################################################
-        if "WaitForAttached_TimeoutDuration_Milliseconds" in setup_dict:
-            self.WaitForAttached_TimeoutDuration_Milliseconds = int(self.PassThroughFloatValuesInRange_ExitProgramOtherwise("WaitForAttached_TimeoutDuration_Milliseconds", setup_dict["WaitForAttached_TimeoutDuration_Milliseconds"], 0.0, 60000.0))
+        if "WaitForAttached_TimeoutDuration_Milliseconds" in SetupDict:
+            self.WaitForAttached_TimeoutDuration_Milliseconds = int(self.PassThroughFloatValuesInRange_ExitProgramOtherwise("WaitForAttached_TimeoutDuration_Milliseconds", SetupDict["WaitForAttached_TimeoutDuration_Milliseconds"], 0.0, 60000.0))
 
         else:
             self.WaitForAttached_TimeoutDuration_Milliseconds = 5000
@@ -397,8 +401,8 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
 
         #########################################################
         #########################################################
-        if "UsePhidgetsLoggingInternalToThisClassObjectFlag" in setup_dict:
-            self.UsePhidgetsLoggingInternalToThisClassObjectFlag = self.PassThrough0and1values_ExitProgramOtherwise("UsePhidgetsLoggingInternalToThisClassObjectFlag", setup_dict["UsePhidgetsLoggingInternalToThisClassObjectFlag"])
+        if "UsePhidgetsLoggingInternalToThisClassObjectFlag" in SetupDict:
+            self.UsePhidgetsLoggingInternalToThisClassObjectFlag = self.PassThrough0and1values_ExitProgramOtherwise("UsePhidgetsLoggingInternalToThisClassObjectFlag", SetupDict["UsePhidgetsLoggingInternalToThisClassObjectFlag"])
         else:
             self.UsePhidgetsLoggingInternalToThisClassObjectFlag = 1
 
@@ -408,8 +412,8 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
 
         #########################################################
         #########################################################
-        if "SpatialAlgorithm" in setup_dict:
-            self.SpatialAlgorithm = str(setup_dict["SpatialAlgorithm"]).upper()
+        if "SpatialAlgorithm" in SetupDict:
+            self.SpatialAlgorithm = str(SetupDict["SpatialAlgorithm"]).upper()
 
             if self.SpatialAlgorithm not in ["IMU", "AHRS", "NONE"]:
                 print("PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class __init__: Error, 'SpatialAlgorithm' must be 'IMU', 'AHRS', or 'NONE'")
@@ -424,8 +428,8 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
 
         #########################################################
         #########################################################
-        if "AlgorithmMagnetometerGain" in setup_dict:
-            self.AlgorithmMagnetometerGain = self.PassThroughFloatValuesInRange_ExitProgramOtherwise("AlgorithmMagnetometerGain", setup_dict["AlgorithmMagnetometerGain"], 0.0, 1.0)
+        if "AlgorithmMagnetometerGain" in SetupDict:
+            self.AlgorithmMagnetometerGain = self.PassThroughFloatValuesInRange_ExitProgramOtherwise("AlgorithmMagnetometerGain", SetupDict["AlgorithmMagnetometerGain"], 0.0, 1.0)
 
         else:
             self.AlgorithmMagnetometerGain = 0.005
@@ -436,8 +440,8 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
         
         #########################################################
         #########################################################
-        if "DataCollectionDurationInSecondsForSnapshottingAndZeroing" in setup_dict:
-            self.DataCollectionDurationInSecondsForSnapshottingAndZeroing = self.PassThroughFloatValuesInRange_ExitProgramOtherwise("DataCollectionDurationInSecondsForSnapshottingAndZeroing", setup_dict["DataCollectionDurationInSecondsForSnapshottingAndZeroing"], 0.0, 60.0)
+        if "DataCollectionDurationInSecondsForSnapshottingAndZeroing" in SetupDict:
+            self.DataCollectionDurationInSecondsForSnapshottingAndZeroing = self.PassThroughFloatValuesInRange_ExitProgramOtherwise("DataCollectionDurationInSecondsForSnapshottingAndZeroing", SetupDict["DataCollectionDurationInSecondsForSnapshottingAndZeroing"], 0.0, 60.0)
 
         else:
             self.DataCollectionDurationInSecondsForSnapshottingAndZeroing = 1.0
@@ -448,8 +452,8 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
 
         #########################################################
         #########################################################
-        if "MainThread_TimeToSleepEachLoop" in setup_dict:
-            self.MainThread_TimeToSleepEachLoop = self.PassThroughFloatValuesInRange_ExitProgramOtherwise("MainThread_TimeToSleepEachLoop", setup_dict["MainThread_TimeToSleepEachLoop"], 0.001, 100000)
+        if "MainThread_TimeToSleepEachLoop" in SetupDict:
+            self.MainThread_TimeToSleepEachLoop = self.PassThroughFloatValuesInRange_ExitProgramOtherwise("MainThread_TimeToSleepEachLoop", SetupDict["MainThread_TimeToSleepEachLoop"], 0.001, 100000)
 
         else:
             self.MainThread_TimeToSleepEachLoop = 0.008
@@ -460,8 +464,8 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
 
         #########################################################
         #########################################################
-        if "ZeroGyrosAtStartOfProgramFlag" in setup_dict:
-            self.ZeroGyrosAtStartOfProgramFlag = self.PassThrough0and1values_ExitProgramOtherwise("ZeroGyrosAtStartOfProgramFlag", setup_dict["ZeroGyrosAtStartOfProgramFlag"])
+        if "ZeroGyrosAtStartOfProgramFlag" in SetupDict:
+            self.ZeroGyrosAtStartOfProgramFlag = self.PassThrough0and1values_ExitProgramOtherwise("ZeroGyrosAtStartOfProgramFlag", SetupDict["ZeroGyrosAtStartOfProgramFlag"])
         else:
             self.ZeroGyrosAtStartOfProgramFlag = 1
 
@@ -471,8 +475,8 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
 
         #########################################################
         #########################################################
-        if "ZeroAlgorithmAtStartOfProgramFlag" in setup_dict:
-            self.ZeroAlgorithmAtStartOfProgramFlag = self.PassThrough0and1values_ExitProgramOtherwise("ZeroAlgorithmAtStartOfProgramFlag", setup_dict["ZeroAlgorithmAtStartOfProgramFlag"])
+        if "ZeroAlgorithmAtStartOfProgramFlag" in SetupDict:
+            self.ZeroAlgorithmAtStartOfProgramFlag = self.PassThrough0and1values_ExitProgramOtherwise("ZeroAlgorithmAtStartOfProgramFlag", SetupDict["ZeroAlgorithmAtStartOfProgramFlag"])
         else:
             self.ZeroAlgorithmAtStartOfProgramFlag = 1
 
@@ -482,14 +486,14 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
 
         #########################################################
         #########################################################
-        self.UpdateDifferentiatedAngularVelocityFilterParameters(setup_dict)
+        self.UpdateDifferentiatedAngularVelocityFilterParameters(SetupDict)
         #########################################################
         #########################################################
 
         #########################################################
         #########################################################
-        if "AHRS_Parameters_angularVelocityThreshold" in setup_dict:
-            self.AHRS_Parameters_angularVelocityThreshold = self.PassThroughFloatValuesInRange_ExitProgramOtherwise("AHRS_Parameters_angularVelocityThreshold", setup_dict["AHRS_Parameters_angularVelocityThreshold"], 0.0, 1000000000.0)
+        if "AHRS_Parameters_angularVelocityThreshold" in SetupDict:
+            self.AHRS_Parameters_angularVelocityThreshold = self.PassThroughFloatValuesInRange_ExitProgramOtherwise("AHRS_Parameters_angularVelocityThreshold", SetupDict["AHRS_Parameters_angularVelocityThreshold"], 0.0, 1000000000.0)
 
         else:
             self.AHRS_Parameters_angularVelocityThreshold = 0.0
@@ -500,8 +504,8 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
 
         #########################################################
         #########################################################
-        if "AHRS_Parameters_angularVelocityDeltaThreshold" in setup_dict:
-            self.AHRS_Parameters_angularVelocityDeltaThreshold = self.PassThroughFloatValuesInRange_ExitProgramOtherwise("AHRS_Parameters_angularVelocityDeltaThreshold", setup_dict["AHRS_Parameters_angularVelocityDeltaThreshold"], 0.0, 1000000000.0)
+        if "AHRS_Parameters_angularVelocityDeltaThreshold" in SetupDict:
+            self.AHRS_Parameters_angularVelocityDeltaThreshold = self.PassThroughFloatValuesInRange_ExitProgramOtherwise("AHRS_Parameters_angularVelocityDeltaThreshold", SetupDict["AHRS_Parameters_angularVelocityDeltaThreshold"], 0.0, 1000000000.0)
 
         else:
             self.AHRS_Parameters_angularVelocityDeltaThreshold = 0.0
@@ -512,8 +516,8 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
         
         #########################################################
         #########################################################
-        if "AHRS_Parameters_accelerationThreshold" in setup_dict:
-            self.AHRS_Parameters_accelerationThreshold = self.PassThroughFloatValuesInRange_ExitProgramOtherwise("AHRS_Parameters_accelerationThreshold", setup_dict["AHRS_Parameters_accelerationThreshold"], 0.0, 1000000000.0)
+        if "AHRS_Parameters_accelerationThreshold" in SetupDict:
+            self.AHRS_Parameters_accelerationThreshold = self.PassThroughFloatValuesInRange_ExitProgramOtherwise("AHRS_Parameters_accelerationThreshold", SetupDict["AHRS_Parameters_accelerationThreshold"], 0.0, 1000000000.0)
 
         else:
             self.AHRS_Parameters_accelerationThreshold = 0.0
@@ -524,8 +528,8 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
         
         #########################################################
         #########################################################
-        if "AHRS_Parameters_magTime" in setup_dict:
-            self.AHRS_Parameters_magTime = self.PassThroughFloatValuesInRange_ExitProgramOtherwise("AHRS_Parameters_magTime", setup_dict["AHRS_Parameters_magTime"], 0.0, 1000000000.0)
+        if "AHRS_Parameters_magTime" in SetupDict:
+            self.AHRS_Parameters_magTime = self.PassThroughFloatValuesInRange_ExitProgramOtherwise("AHRS_Parameters_magTime", SetupDict["AHRS_Parameters_magTime"], 0.0, 1000000000.0)
 
         else:
             self.AHRS_Parameters_magTime = 0.0
@@ -536,8 +540,8 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
         
         #########################################################
         #########################################################
-        if "AHRS_Parameters_accelTime" in setup_dict:
-            self.AHRS_Parameters_accelTime = self.PassThroughFloatValuesInRange_ExitProgramOtherwise("AHRS_Parameters_accelTime", setup_dict["AHRS_Parameters_accelTime"], 0.0, 1000000000.0)
+        if "AHRS_Parameters_accelTime" in SetupDict:
+            self.AHRS_Parameters_accelTime = self.PassThroughFloatValuesInRange_ExitProgramOtherwise("AHRS_Parameters_accelTime", SetupDict["AHRS_Parameters_accelTime"], 0.0, 1000000000.0)
 
         else:
             self.AHRS_Parameters_accelTime = 0.0
@@ -548,8 +552,8 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
         
         #########################################################
         #########################################################
-        if "AHRS_Parameters_biasTime" in setup_dict:
-            self.AHRS_Parameters_biasTime = self.PassThroughFloatValuesInRange_ExitProgramOtherwise("AHRS_Parameters_biasTime", setup_dict["AHRS_Parameters_biasTime"], 0.0, 1000000000.0)
+        if "AHRS_Parameters_biasTime" in SetupDict:
+            self.AHRS_Parameters_biasTime = self.PassThroughFloatValuesInRange_ExitProgramOtherwise("AHRS_Parameters_biasTime", SetupDict["AHRS_Parameters_biasTime"], 0.0, 1000000000.0)
 
         else:
             self.AHRS_Parameters_biasTime = 0.0
@@ -573,8 +577,13 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
         #########################################################
         #########################################################
 
-        ######################################################### MUST OPEN THE DEVICE BEFORE WE CAN QUERY ITS INFORMATION
-        #########################################################
+        #######################################################################################################################
+        #######################################################################################################################
+        #######################################################################################################################
+
+        ####################################################################################################################### MUST OPEN THE DEVICE BEFORE WE CAN QUERY ITS INFORMATION
+        #######################################################################################################################
+        #######################################################################################################################
         try:
             Spatial_OpenedTemporarilyJustToGetDeviceInfo = Spatial()
 
@@ -616,20 +625,24 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
         except PhidgetException as e:
             print("PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class __init__: Failed to call Device Information, Phidget Exception %i: %s" % (e.code, e.details))
             return
-        #########################################################
-        #########################################################
+        #######################################################################################################################
+        #######################################################################################################################
+        #######################################################################################################################
 
-        #########################################################
-        #########################################################
+        #######################################################################################################################
+        #######################################################################################################################
+        #######################################################################################################################
         if self.DesiredSerialNumber != -1: #'-1' means we should open the device regardless os serial number.
             if self.DetectedDeviceSerialNumber != self.DesiredSerialNumber:
                 print("PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class __init__: The desired Serial Number (" + str(self.DesiredSerialNumber) + ") does not match the detected serial number (" + str(self.DetectedDeviceSerialNumber) + ").")
                 return
-        #########################################################
-        #########################################################
+        #######################################################################################################################
+        #######################################################################################################################
+        #######################################################################################################################
 
-        #########################################################
-        #########################################################
+        #######################################################################################################################
+        #######################################################################################################################
+        #######################################################################################################################
         try:
 
             ###########
@@ -638,8 +651,8 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
             ##########
 
             ##########
-            if "Spatial_CallbackUpdateDeltaTmilliseconds" in setup_dict:
-                self.Spatial_CallbackUpdateDeltaTmilliseconds = int(self.PassThroughFloatValuesInRange_ExitProgramOtherwise("Spatial_CallbackUpdateDeltaTmilliseconds", setup_dict["Spatial_CallbackUpdateDeltaTmilliseconds"], self.CallbackUpdateDeltaTmilliseconds_MinimumValue, 1000.0))
+            if "Spatial_CallbackUpdateDeltaTmilliseconds" in SetupDict:
+                self.Spatial_CallbackUpdateDeltaTmilliseconds = int(self.PassThroughFloatValuesInRange_ExitProgramOtherwise("Spatial_CallbackUpdateDeltaTmilliseconds", SetupDict["Spatial_CallbackUpdateDeltaTmilliseconds"], self.CallbackUpdateDeltaTmilliseconds_MinimumValue, 1000.0))
 
             else:
                 self.Spatial_CallbackUpdateDeltaTmilliseconds = self.CallbackUpdateDeltaTmilliseconds_MinimumValue
@@ -650,11 +663,13 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
         except:
             exceptions = sys.exc_info()[0]
             print("PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class __init__: Error, Spatial_CallbackUpdateDeltaTmilliseconds parsing Exceptions: %s" % exceptions)
-        #########################################################
-        #########################################################
+        #######################################################################################################################
+        #######################################################################################################################
+        #######################################################################################################################
 
-        #########################################################
-        #########################################################
+        #######################################################################################################################
+        #######################################################################################################################
+        #######################################################################################################################
         try:
 
             ###########
@@ -664,8 +679,8 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
 
             ##########
             if self.HeatingEnabledToStabilizeSensorTemperature_SupportedOnDevice == True:
-                if "HeatingEnabledToStabilizeSensorTemperature" in setup_dict:
-                    self.HeatingEnabledToStabilizeSensorTemperature = bool(self.PassThrough0and1values_ExitProgramOtherwise("HeatingEnabledToStabilizeSensorTemperature", setup_dict["HeatingEnabledToStabilizeSensorTemperature"]))
+                if "HeatingEnabledToStabilizeSensorTemperature" in SetupDict:
+                    self.HeatingEnabledToStabilizeSensorTemperature = bool(self.PassThrough0and1values_ExitProgramOtherwise("HeatingEnabledToStabilizeSensorTemperature", SetupDict["HeatingEnabledToStabilizeSensorTemperature"]))
 
                 else:
                     self.HeatingEnabledToStabilizeSensorTemperature = False
@@ -678,11 +693,13 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
         except:
             exceptions = sys.exc_info()[0]
             print("PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class __init__: Error, Spatial_CallbackUpdateDeltaTmilliseconds parsing Exceptions: %s" % exceptions)
-        #########################################################
-        #########################################################
+        #######################################################################################################################
+        #######################################################################################################################
+        #######################################################################################################################
 
-        #########################################################
-        #########################################################
+        #######################################################################################################################
+        #######################################################################################################################
+        #######################################################################################################################
         try:
 
             #########################################################
@@ -701,11 +718,13 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
         except PhidgetException as e:
             self.PhidgetsDeviceConnectedFlag = 0
             print("PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class __init__: Failed to attach, Phidget Exception %i: %s" % (e.code, e.details))
-        #########################################################
-        #########################################################
+        #######################################################################################################################
+        #######################################################################################################################
+        #######################################################################################################################
 
-        #########################################################
-        #########################################################
+        #######################################################################################################################
+        #######################################################################################################################
+        #######################################################################################################################
         if self.PhidgetsDeviceConnectedFlag == 1:
 
             #########################################################
@@ -722,81 +741,92 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
             self.MainThread_ThreadingObject.start()
             #########################################################
 
-            #########################################################
-            if self.USE_GUI_FLAG == 1:
-                self.StartGUI(self.root)
-            #########################################################
-
             #################################################
             #################################################
-            self.ZeroAndSnapshotData_ReubenPython2and3ClassObject_Variables_ListOfDicts = [dict([("Variable_Name", "Roll_AbtXaxis_Degrees"),("DataCollectionDurationInSecondsForSnapshotting", self.DataCollectionDurationInSecondsForSnapshottingAndZeroing)]),
+            self.ZeroAndSnapshotData_Variables_ListOfDicts = [dict([("Variable_Name", "Roll_AbtXaxis_Degrees"),("DataCollectionDurationInSecondsForSnapshotting", self.DataCollectionDurationInSecondsForSnapshottingAndZeroing)]),
                                                                                       dict([("Variable_Name", "Pitch_AbtYaxis_Degrees"),("DataCollectionDurationInSecondsForSnapshotting", self.DataCollectionDurationInSecondsForSnapshottingAndZeroing)]),
                                                                                       dict([("Variable_Name", "Yaw_AbtZaxis_Degrees"),("DataCollectionDurationInSecondsForSnapshotting", self.DataCollectionDurationInSecondsForSnapshottingAndZeroing)])]
 
-            self.ZeroAndSnapshotData_ReubenPython2and3ClassObject_GUIparametersDict = dict([("USE_GUI_FLAG", self.USE_GUI_FLAG),
-                                            ("root", self.root),
-                                            ("EnableInternal_MyPrint_Flag", 1),
-                                            ("NumberOfPrintLines", 10),
-                                            ("UseBorderAroundThisGuiObjectFlag", 1),
-                                            ("GUI_ROW", 5),
-                                            ("GUI_COLUMN", 0),
-                                            ("GUI_PADX", 5),
-                                            ("GUI_PADY", 5),
-                                            ("GUI_ROWSPAN", 1),
-                                            ("GUI_COLUMNSPAN", 1)])
+            self.ZeroAndSnapshotData_GUIparametersDict = dict([("USE_GUI_FLAG", self.USE_GUI_FLAG),
+                                                            ("EnableInternal_MyPrint_Flag", 1),
+                                                            ("NumberOfPrintLines", 10),
+                                                            ("UseBorderAroundThisGuiObjectFlag", 0),
+                                                            ("GUI_ROW", 5),
+                                                            ("GUI_COLUMN", 0),
+                                                            ("GUI_PADX", 5),
+                                                            ("GUI_PADY", 5),
+                                                            ("GUI_ROWSPAN", 1),
+                                                            ("GUI_COLUMNSPAN", 1)])
 
-            self.ZeroAndSnapshotData_ReubenPython2and3ClassObject_setup_dict = dict([("GUIparametersDict", self.ZeroAndSnapshotData_ReubenPython2and3ClassObject_GUIparametersDict),
-                                                                        ("NameToDisplay_UserSet", "ZeroAndSnapshotData"),
-                                                                        ("Variables_ListOfDicts", self.ZeroAndSnapshotData_ReubenPython2and3ClassObject_Variables_ListOfDicts)])
+            self.ZeroAndSnapshotData_SetupDict = dict([("GUIparametersDict", self.ZeroAndSnapshotData_GUIparametersDict),
+                                                        ("NameToDisplay_UserSet", "ZeroAndSnapshotData"),
+                                                        ("Variables_ListOfDicts", self.ZeroAndSnapshotData_Variables_ListOfDicts)])
 
 
             try:
-                self.ZeroAndSnapshotData_ReubenPython2and3ClassObject = ZeroAndSnapshotData_ReubenPython2and3Class(self.ZeroAndSnapshotData_ReubenPython2and3ClassObject_setup_dict)
-                self.ZeroAndSnapshotData_OPEN_FLAG = self.ZeroAndSnapshotData_ReubenPython2and3ClassObject.OBJECT_CREATED_SUCCESSFULLY_FLAG
+                self.ZeroAndSnapshotData_Object = ZeroAndSnapshotData_ReubenPython2and3Class(self.ZeroAndSnapshotData_SetupDict)
+                self.ZeroAndSnapshotData_OPEN_FLAG = self.ZeroAndSnapshotData_Object.OBJECT_CREATED_SUCCESSFULLY_FLAG
+
+                if self.ZeroAndSnapshotData_OPEN_FLAG != 1:
+                    print("PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class __init__: Failed to create ZeroAndSnapshotData_Object.")
+                    return
 
             except:
                 exceptions = sys.exc_info()[0]
-                print("PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class __init__: Exceptions: %s" % exceptions, 0)
+                print("PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class __init__, ZeroAndSnapshotData_Object: Exceptions: %s" % exceptions)
                 traceback.print_exc()
             #################################################
             #################################################
 
-            #########################################################
+            #################################################
+            #################################################
             self.OBJECT_CREATED_SUCCESSFULLY_FLAG = 1
-            #########################################################
+            #################################################
+            #################################################
 
+        #######################################################################################################################
+        #######################################################################################################################
+        #######################################################################################################################
+
+    #######################################################################################################################
+    #######################################################################################################################
+    #######################################################################################################################
+    #######################################################################################################################
+
+    #######################################################################################################################
+    #######################################################################################################################
+    def UpdateDifferentiatedAngularVelocityFilterParameters(self, SetupDict):
+
+        ######################################################### ONLY USE MEDIANFILTER IN A "DIRTY ENVIRONMENT" WHERE YOU'RE GETTING INTERRUPTED COMMUNICATIONS (NOT THE CASE FOR PHIDGETS) AS IT CAUSES LARGE DELAY
+        #########################################################
+        self.RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag = 0
+        print("PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class __init__: RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag: " + str(self.RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag))
+
+        self.PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag = 0
+        print("PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class __init__: PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag: " + str(self.PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag))
+
+        self.YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag = 0
+        print("PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class __init__: YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag: " + str(self.YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag))
         #########################################################
         #########################################################
 
-    #######################################################################################################################
-    #######################################################################################################################
-
-    #######################################################################################################################
-    #######################################################################################################################
-    def __del__(self):
-        pass
-    #######################################################################################################################
-    #######################################################################################################################
-
-    #######################################################################################################################
-    #######################################################################################################################
-    def UpdateDifferentiatedAngularVelocityFilterParameters(self, setup_dict):
-
+        '''
         #########################################################
         #########################################################
-        if "RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag" in setup_dict:
-            self.RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag = self.PassThrough0and1values_ExitProgramOtherwise("RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag", setup_dict["RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag"])
+        if "RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag" in SetupDict:
+            self.RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag = self.PassThrough0and1values_ExitProgramOtherwise("RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag", SetupDict["RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag"])
         else:
             self.RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag = 0
 
         print("PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class __init__: RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag: " + str(self.RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag))
         #########################################################
         #########################################################
+        '''
 
         #########################################################
         #########################################################
-        if "RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseExponentialSmoothingFilterFlag" in setup_dict:
-            self.RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseExponentialSmoothingFilterFlag = self.PassThrough0and1values_ExitProgramOtherwise("RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseExponentialSmoothingFilterFlag", setup_dict["RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseExponentialSmoothingFilterFlag"])
+        if "RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseExponentialSmoothingFilterFlag" in SetupDict:
+            self.RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseExponentialSmoothingFilterFlag = self.PassThrough0and1values_ExitProgramOtherwise("RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseExponentialSmoothingFilterFlag", SetupDict["RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseExponentialSmoothingFilterFlag"])
         else:
             self.RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseExponentialSmoothingFilterFlag = 1
 
@@ -806,8 +836,8 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
 
         #########################################################
         #########################################################
-        if "RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_ExponentialSmoothingFilterLambda" in setup_dict:
-            self.RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_ExponentialSmoothingFilterLambda = self.PassThroughFloatValuesInRange_ExitProgramOtherwise("RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_ExponentialSmoothingFilterLambda", setup_dict["RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_ExponentialSmoothingFilterLambda"], 0.0, 1.0)
+        if "RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_ExponentialSmoothingFilterLambda" in SetupDict:
+            self.RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_ExponentialSmoothingFilterLambda = self.PassThroughFloatValuesInRange_ExitProgramOtherwise("RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_ExponentialSmoothingFilterLambda", SetupDict["RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_ExponentialSmoothingFilterLambda"], 0.0, 1.0)
 
         else:
             self.RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_ExponentialSmoothingFilterLambda = 0.98 #Default to no filtering, new_filtered_value = k * raw_sensor_value + (1 - k) * old_filtered_value
@@ -816,21 +846,23 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
         #########################################################
         #########################################################
 
+        '''
         #########################################################
         #########################################################
-        if "PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag" in setup_dict:
-            self.PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag = self.PassThrough0and1values_ExitProgramOtherwise("PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag", setup_dict["PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag"])
+        if "PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag" in SetupDict:
+            self.PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag = self.PassThrough0and1values_ExitProgramOtherwise("PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag", SetupDict["PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag"])
         else:
             self.PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag = 0
 
         print("PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class __init__: PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag: " + str(self.PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag))
         #########################################################
         #########################################################
+        '''
 
         #########################################################
         #########################################################
-        if "PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseExponentialSmoothingFilterFlag" in setup_dict:
-            self.PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseExponentialSmoothingFilterFlag = self.PassThrough0and1values_ExitProgramOtherwise("PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseExponentialSmoothingFilterFlag", setup_dict["PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseExponentialSmoothingFilterFlag"])
+        if "PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseExponentialSmoothingFilterFlag" in SetupDict:
+            self.PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseExponentialSmoothingFilterFlag = self.PassThrough0and1values_ExitProgramOtherwise("PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseExponentialSmoothingFilterFlag", SetupDict["PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseExponentialSmoothingFilterFlag"])
         else:
             self.PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseExponentialSmoothingFilterFlag = 1
 
@@ -840,8 +872,8 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
 
         #########################################################
         #########################################################
-        if "PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_ExponentialSmoothingFilterLambda" in setup_dict:
-            self.PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_ExponentialSmoothingFilterLambda = self.PassThroughFloatValuesInRange_ExitProgramOtherwise("PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_ExponentialSmoothingFilterLambda", setup_dict["PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_ExponentialSmoothingFilterLambda"], 0.0, 1.0)
+        if "PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_ExponentialSmoothingFilterLambda" in SetupDict:
+            self.PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_ExponentialSmoothingFilterLambda = self.PassThroughFloatValuesInRange_ExitProgramOtherwise("PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_ExponentialSmoothingFilterLambda", SetupDict["PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_ExponentialSmoothingFilterLambda"], 0.0, 1.0)
 
         else:
             self.PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_ExponentialSmoothingFilterLambda = 0.98 #Default to no filtering, new_filtered_value = k * raw_sensor_value + (1 - k) * old_filtered_value
@@ -850,21 +882,23 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
         #########################################################
         #########################################################
 
+        '''
         #########################################################
         #########################################################
-        if "YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag" in setup_dict:
-            self.YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag = self.PassThrough0and1values_ExitProgramOtherwise("YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag", setup_dict["YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag"])
+        if "YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag" in SetupDict:
+            self.YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag = self.PassThrough0and1values_ExitProgramOtherwise("YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag", SetupDict["YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag"])
         else:
             self.YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag = 0
 
         print("PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class __init__: YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag: " + str(self.YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag))
         #########################################################
         #########################################################
+        '''
 
         #########################################################
         #########################################################
-        if "YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseExponentialSmoothingFilterFlag" in setup_dict:
-            self.YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseExponentialSmoothingFilterFlag = self.PassThrough0and1values_ExitProgramOtherwise("YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseExponentialSmoothingFilterFlag", setup_dict["YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseExponentialSmoothingFilterFlag"])
+        if "YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseExponentialSmoothingFilterFlag" in SetupDict:
+            self.YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseExponentialSmoothingFilterFlag = self.PassThrough0and1values_ExitProgramOtherwise("YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseExponentialSmoothingFilterFlag", SetupDict["YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseExponentialSmoothingFilterFlag"])
         else:
             self.YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseExponentialSmoothingFilterFlag = 1
 
@@ -874,8 +908,8 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
 
         #########################################################
         #########################################################
-        if "YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_ExponentialSmoothingFilterLambda" in setup_dict:
-            self.YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_ExponentialSmoothingFilterLambda = self.PassThroughFloatValuesInRange_ExitProgramOtherwise("YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_ExponentialSmoothingFilterLambda", setup_dict["YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_ExponentialSmoothingFilterLambda"], 0.0, 1.0)
+        if "YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_ExponentialSmoothingFilterLambda" in SetupDict:
+            self.YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_ExponentialSmoothingFilterLambda = self.PassThroughFloatValuesInRange_ExitProgramOtherwise("YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_ExponentialSmoothingFilterLambda", SetupDict["YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_ExponentialSmoothingFilterLambda"], 0.0, 1.0)
 
         else:
             self.YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_ExponentialSmoothingFilterLambda = 0.98 #Default to no filtering, new_filtered_value = k * raw_sensor_value + (1 - k) * old_filtered_value
@@ -886,7 +920,7 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
 
         #########################################################
         #########################################################
-        self.RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_MyLowPassFilterClass_Object.UpdateFilterParameters(dict([
+        self.RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_LowPassFilterClass_Object.UpdateFilterParameters(dict([
                     ("UseMedianFilterFlag", self.RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag),
                     ("UseExponentialSmoothingFilterFlag", self.RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseExponentialSmoothingFilterFlag),
                     ("ExponentialSmoothingFilterLambda", self.RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_ExponentialSmoothingFilterLambda)]),
@@ -896,7 +930,7 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
 
         #########################################################
         #########################################################
-        self.PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_MyLowPassFilterClass_Object.UpdateFilterParameters(dict([
+        self.PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_LowPassFilterClass_Object.UpdateFilterParameters(dict([
                     ("UseMedianFilterFlag", self.PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag),
                     ("UseExponentialSmoothingFilterFlag", self.PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseExponentialSmoothingFilterFlag),
                     ("ExponentialSmoothingFilterLambda", self.PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_ExponentialSmoothingFilterLambda)]),
@@ -906,7 +940,7 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
 
         #########################################################
         #########################################################
-        self.YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_MyLowPassFilterClass_Object.UpdateFilterParameters(dict([
+        self.YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_LowPassFilterClass_Object.UpdateFilterParameters(dict([
                     ("UseMedianFilterFlag", self.YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseMedianFilterFlag),
                     ("UseExponentialSmoothingFilterFlag", self.YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_UseExponentialSmoothingFilterFlag),
                     ("ExponentialSmoothingFilterLambda", self.YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_ExponentialSmoothingFilterLambda)]),
@@ -919,65 +953,200 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
 
     ##########################################################################################################
     ##########################################################################################################
-    def PassThrough0and1values_ExitProgramOtherwise(self, InputNameString, InputNumber):
+    def LimitNumber_IntOutputOnly(self, min_val, max_val, test_val):
+        if test_val > max_val:
+            test_val = max_val
 
+        elif test_val < min_val:
+            test_val = min_val
+
+        else:
+            test_val = test_val
+
+        test_val = int(test_val)
+
+        return test_val
+    ##########################################################################################################
+    ##########################################################################################################
+
+    ##########################################################################################################
+    ##########################################################################################################
+    def LimitNumber_FloatOutputOnly(self, min_val, max_val, test_val):
+        if test_val > max_val:
+            test_val = max_val
+
+        elif test_val < min_val:
+            test_val = min_val
+
+        else:
+            test_val = test_val
+
+        test_val = float(test_val)
+
+        return test_val
+    ##########################################################################################################
+    ##########################################################################################################
+
+    ##########################################################################################################
+    ##########################################################################################################
+    ##########################################################################################################
+    ##########################################################################################################
+    def PassThrough0and1values_ExitProgramOtherwise(self, InputNameString, InputNumber, ExitProgramIfFailureFlag=1):
+
+        ##########################################################################################################
+        ##########################################################################################################
         try:
+
+            ##########################################################################################################
             InputNumber_ConvertedToFloat = float(InputNumber)
+            ##########################################################################################################
+
         except:
+
+            ##########################################################################################################
             exceptions = sys.exc_info()[0]
-            print("PassThrough0and1values_ExitProgramOtherwise Error. InputNumber must be a float value, Exceptions: %s" % exceptions)
-            input("Press any key to continue")
-            sys.exit()
+            print("PassThrough0and1values_ExitProgramOtherwise Error. InputNumber must be a numerical value, Exceptions: %s" % exceptions)
 
-        try:
-            if InputNumber_ConvertedToFloat == 0.0 or InputNumber_ConvertedToFloat == 1:
-                return InputNumber_ConvertedToFloat
-            else:
-                input("PassThrough0and1values_ExitProgramOtherwise Error. '" +
-                          InputNameString +
-                          "' must be 0 or 1 (value was " +
-                          str(InputNumber_ConvertedToFloat) +
-                          "). Press any key (and enter) to exit.")
-
+            ##########################
+            if ExitProgramIfFailureFlag == 1:
                 sys.exit()
+            else:
+                return -1
+            ##########################
+
+            ##########################################################################################################
+
+        ##########################################################################################################
+        ##########################################################################################################
+
+        ##########################################################################################################
+        ##########################################################################################################
+        try:
+
+            ##########################################################################################################
+            if InputNumber_ConvertedToFloat == 0.0 or InputNumber_ConvertedToFloat == 1.0:
+                return InputNumber_ConvertedToFloat
+
+            else:
+
+                print("PassThrough0and1values_ExitProgramOtherwise Error. '" +
+                      str(InputNameString) +
+                      "' must be 0 or 1 (value was " +
+                      str(InputNumber_ConvertedToFloat) +
+                      ").")
+
+                ##########################
+                if ExitProgramIfFailureFlag == 1:
+                    sys.exit()
+
+                else:
+                    return -1
+                ##########################
+
+            ##########################################################################################################
+
         except:
+
+            ##########################################################################################################
             exceptions = sys.exc_info()[0]
             print("PassThrough0and1values_ExitProgramOtherwise Error, Exceptions: %s" % exceptions)
-            input("Press any key to continue")
-            sys.exit()
+
+            ##########################
+            if ExitProgramIfFailureFlag == 1:
+                sys.exit()
+            else:
+                return -1
+            ##########################
+
+            ##########################################################################################################
+
+        ##########################################################################################################
+        ##########################################################################################################
+
+    ##########################################################################################################
+    ##########################################################################################################
     ##########################################################################################################
     ##########################################################################################################
 
     ##########################################################################################################
     ##########################################################################################################
-    def PassThroughFloatValuesInRange_ExitProgramOtherwise(self, InputNameString, InputNumber, RangeMinValue, RangeMaxValue):
+    ##########################################################################################################
+    ##########################################################################################################
+    def PassThroughFloatValuesInRange_ExitProgramOtherwise(self, InputNameString, InputNumber, RangeMinValue, RangeMaxValue, ExitProgramIfFailureFlag=1):
+
+        ##########################################################################################################
+        ##########################################################################################################
         try:
+            ##########################################################################################################
             InputNumber_ConvertedToFloat = float(InputNumber)
+            ##########################################################################################################
+
         except:
+            ##########################################################################################################
             exceptions = sys.exc_info()[0]
             print("PassThroughFloatValuesInRange_ExitProgramOtherwise Error. InputNumber must be a float value, Exceptions: %s" % exceptions)
-            input("Press any key to continue")
-            sys.exit()
+            traceback.print_exc()
 
-        try:
-            if InputNumber_ConvertedToFloat >= RangeMinValue and InputNumber_ConvertedToFloat <= RangeMaxValue:
-                return InputNumber_ConvertedToFloat
-            else:
-                input("PassThroughFloatValuesInRange_ExitProgramOtherwise Error. '" +
-                          InputNameString +
-                          "' must be in the range [" +
-                          str(RangeMinValue) +
-                          ", " +
-                          str(RangeMaxValue) +
-                          "] (value was " +
-                          str(InputNumber_ConvertedToFloat) + "). Press any key (and enter) to exit.")
-
+            ##########################
+            if ExitProgramIfFailureFlag == 1:
                 sys.exit()
+            else:
+                return -11111.0
+            ##########################
+
+            ##########################################################################################################
+
+        ##########################################################################################################
+        ##########################################################################################################
+
+        ##########################################################################################################
+        ##########################################################################################################
+        try:
+
+            ##########################################################################################################
+            InputNumber_ConvertedToFloat_Limited = self.LimitNumber_FloatOutputOnly(RangeMinValue, RangeMaxValue, InputNumber_ConvertedToFloat)
+
+            if InputNumber_ConvertedToFloat_Limited != InputNumber_ConvertedToFloat:
+                print("PassThroughFloatValuesInRange_ExitProgramOtherwise Error. '" +
+                      str(InputNameString) +
+                      "' must be in the range [" +
+                      str(RangeMinValue) +
+                      ", " +
+                      str(RangeMaxValue) +
+                      "] (value was " +
+                      str(InputNumber_ConvertedToFloat) + ")")
+
+                ##########################
+                if ExitProgramIfFailureFlag == 1:
+                    sys.exit()
+                else:
+                    return -11111.0
+                ##########################
+
+            else:
+                return InputNumber_ConvertedToFloat_Limited
+            ##########################################################################################################
+
         except:
+            ##########################################################################################################
             exceptions = sys.exc_info()[0]
             print("PassThroughFloatValuesInRange_ExitProgramOtherwise Error, Exceptions: %s" % exceptions)
-            input("Press any key to continue")
-            sys.exit()
+            traceback.print_exc()
+
+            ##########################
+            if ExitProgramIfFailureFlag == 1:
+                sys.exit()
+            else:
+                return -11111.0
+            ##########################
+
+            ##########################################################################################################
+
+        ##########################################################################################################
+        ##########################################################################################################
+
+    ##########################################################################################################
+    ##########################################################################################################
     ##########################################################################################################
     ##########################################################################################################
 
@@ -1564,7 +1733,7 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
                         if self.ZeroAndSnapshotData_OPEN_FLAG == 1:
 
                             ####################################################
-                            self.ZeroAndSnapshotData_ReubenPython2and3ClassObject.CheckStateMachine()
+                            self.ZeroAndSnapshotData_Object.CheckStateMachine()
                             ####################################################
 
                             ####################################################
@@ -1572,7 +1741,7 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
                                                             dict([("Variable_Name", "Pitch_AbtYaxis_Degrees"), ("Raw_CurrentValue", self.Pitch_AbtYaxis_Degrees)]),
                                                             dict([("Variable_Name", "Yaw_AbtZaxis_Degrees"), ("Raw_CurrentValue", self.Yaw_AbtZaxis_Degrees)])]
 
-                            self.ZeroAndSnapshotData_MostRecentDict = self.ZeroAndSnapshotData_ReubenPython2and3ClassObject.UpdateData(self.RollPitchYaw_AbtXYZ_ListOfDictsAsInputToZeroingObject)
+                            self.ZeroAndSnapshotData_MostRecentDict = self.ZeroAndSnapshotData_Object.UpdateData(self.RollPitchYaw_AbtXYZ_ListOfDictsAsInputToZeroingObject)
 
                             self.ZeroAndSnapshotData_MostRecentDict_DataUpdateNumber = self.ZeroAndSnapshotData_MostRecentDict["DataUpdateNumber"]
                             self.ZeroAndSnapshotData_MostRecentDict_LoopFrequencyHz = self.ZeroAndSnapshotData_MostRecentDict["LoopFrequencyHz"]
@@ -1599,15 +1768,15 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
                         ###################################################
                         ###################################################
                         self.RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond = (self.Roll_AbtXaxis_Degrees - self.Roll_AbtXaxis_Degrees_Last)/DeltaT_DirectFromDataEventHandler_temp
-                        self.RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_SMOOTHED = self.RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_MyLowPassFilterClass_Object.AddDataPointFromExternalProgram(self.RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond)["SignalOutSmoothed"]
+                        self.RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_SMOOTHED = self.RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond_LowPassFilterClass_Object.AddDataPointFromExternalProgram(self.RollRate_AbtXaxis_DifferentiatedAngularVelocity_DegreesPerSecond)["SignalOutSmoothed"]
                         self.Roll_AbtXaxis_Degrees_Last = self.Roll_AbtXaxis_Degrees
 
                         self.PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond = (self.Pitch_AbtYaxis_Degrees - self.Pitch_AbtYaxis_Degrees_Last)/DeltaT_DirectFromDataEventHandler_temp
-                        self.PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_SMOOTHED = self.PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_MyLowPassFilterClass_Object.AddDataPointFromExternalProgram(self.PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond)["SignalOutSmoothed"]
+                        self.PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_SMOOTHED = self.PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond_LowPassFilterClass_Object.AddDataPointFromExternalProgram(self.PitchRate_AbtYaxis_DifferentiatedAngularVelocity_DegreesPerSecond)["SignalOutSmoothed"]
                         self.Pitch_AbtYaxis_Degrees_Last = self.Pitch_AbtYaxis_Degrees
 
                         self.YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond = (self.Yaw_AbtZaxis_Degrees - self.Yaw_AbtZaxis_Degrees_Last)/DeltaT_DirectFromDataEventHandler_temp
-                        self.YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_SMOOTHED = self.YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_MyLowPassFilterClass_Object.AddDataPointFromExternalProgram(self.YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond)["SignalOutSmoothed"]
+                        self.YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_SMOOTHED = self.YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond_LowPassFilterClass_Object.AddDataPointFromExternalProgram(self.YawRate_AbtZaxis_DifferentiatedAngularVelocity_DegreesPerSecond)["SignalOutSmoothed"]
                         self.Yaw_AbtZaxis_Degrees_Last = self.Yaw_AbtZaxis_Degrees
 
                         self.RollPitchYaw_Rate_AbtXYZ_Dict = dict([
@@ -1678,26 +1847,14 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
 
     ##########################################################################################################
     ##########################################################################################################
-    def StartGUI(self, GuiParent):
+    def CreateGUIobjects(self, TkinterParent):
 
-        #self.GUI_Thread_ThreadingObject = threading.Thread(target=self.GUI_Thread, args=(GuiParent,))
-        #self.GUI_Thread_ThreadingObject.setDaemon(True) #Should mean that the GUI thread is destroyed automatically when the main thread is destroyed.
-        #self.GUI_Thread_ThreadingObject.start()
-
-        self.GUI_Thread(GuiParent)
-    ##########################################################################################################
-    ##########################################################################################################
-
-    ##########################################################################################################
-    ##########################################################################################################
-    def GUI_Thread(self, parent):
-
-        print("Starting the GUI_Thread for PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class object.")
+        print("PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class, CreateGUIobjects event fired.")
 
         ###################################################
         ###################################################
-        self.root = parent
-        self.parent = parent
+        self.root = TkinterParent
+        self.parent = TkinterParent
         ###################################################
         ###################################################
 
@@ -1775,6 +1932,13 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
         self.PrintToGui_Label = Label(self.myFrame, text="PrintToGui_Label", width=100)
         if self.EnableInternal_MyPrint_Flag == 1:
             self.PrintToGui_Label.grid(row=6, column=0, padx=10, pady=10, columnspan=10, rowspan=10)
+        ###################################################
+        ###################################################
+
+        ###################################################
+        ###################################################
+        if self.ZeroAndSnapshotData_OPEN_FLAG == 1:
+            self.ZeroAndSnapshotData_Object.CreateGUIobjects(TkinterParent=self.myFrame)
         ###################################################
         ###################################################
 
@@ -1872,7 +2036,7 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
 
                     #########################################################
                     if self.ZeroAndSnapshotData_OPEN_FLAG == 1:
-                        self.ZeroAndSnapshotData_ReubenPython2and3ClassObject.GUI_update_clock()
+                        self.ZeroAndSnapshotData_Object.GUI_update_clock()
                     #########################################################
 
                     #######################################################
@@ -2156,6 +2320,12 @@ class PhidgetsSpatialPrecision333AccelGyroCompass_ReubenPython2and3Class(Frame):
         return ProperlyFormattedStringForPrinting
     ##########################################################################################################
     ##########################################################################################################
+
+#######################################################################################################################
+#######################################################################################################################
+#######################################################################################################################
+#######################################################################################################################
+#######################################################################################################################
 
 
 
